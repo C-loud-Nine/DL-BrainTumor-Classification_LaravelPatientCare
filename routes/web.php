@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,6 +14,13 @@ Route::get('/', function () {
 Route::post('/register', [AuthController::class, 'registerUser'])->name('registerUser');
 Route::post('/login', [AuthController::class, 'loginUser'])->name('loginUser');
 Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout');
+
+
+
+Route::get('/adminhome', [AdminController::class, 'adminHome'])->name('admin.adminhome');
+
+
+
 
 
 // Define home route with name
