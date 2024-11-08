@@ -44,42 +44,47 @@ class AuthController extends Controller
     }
 
 
+    // Handle user login
     public function loginUser(Request $request)
-{
-    // Validate the form input
-    $validated = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string|min:8',
-    ]);
-
-    // Check if the email exists
-    $user = User::where('email', $request->input('email'))->first();
-
-    if ($user && Hash::check($request->input('password'), $user->password)) {
-        // Password is correct, log the user in
-        session([
-            'user_id' => $user->id,
-            'user_name' => $user->name,
-            'user_email' => $user->email,
-            'user_picture' => $user->picture,
-            'user_type' => $user->type,
+    {
+        // Validate the form input
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
         ]);
 
-        // Redirect the user to the home or dashboard page after login with a success message
-        return redirect()->route('home')->with('success', 'Login successful!');
-    }
+        // Check if the email exists
+        $user = User::where('email', $request->input('email'))->first();
 
-    // If login fails, redirect back with error
-    return redirect()->back()->with('error', 'Invalid email or password.');
-}
+        if ($user && Hash::check($request->input('password'), $user->password)) {
+            // Password is correct, log the user in
+            session([
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'user_email' => $user->email,
+                'user_picture' => $user->picture,
+                'user_type' => $user->type,
+            ]);
+            
+            if ($user->type == "user") {
+                return redirect()->route('home')->with('success', 'Login successful!');
+            } else if ($user->type == "admin") {
+                // dd('Admin user logged in, redirecting to admin home');
+                return redirect()->route('admin.adminhome'); // Redirect to the admin home page
+            }
+
 
     
+        }
 
+        // If login fails, redirect back with error
+        abort(403, 'Invalid email or password.');
+    }
 
-// Handle user logout
+    // Handle user logout
     public function logoutUser()
     {
         session()->flush();  // Remove all session data
-        return redirect()->route('login')->with('success', 'You are logged out!');
+        return redirect()->route('home')->with('success', 'You are logged out!');
     }
 }
