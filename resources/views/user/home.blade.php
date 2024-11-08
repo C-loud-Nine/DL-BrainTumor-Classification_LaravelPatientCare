@@ -84,7 +84,7 @@
             </li>
             <?php if(session()->has('user_id')): ?>
               <li class="nav-item">
-              <a class="btn btn-primary ml-lg-3" href="{{route('login')}}">Profile</a>
+              <a class="btn btn-primary ml-lg-3" href="{{route('home')}}">Profile</a>
             </li>
             <li class="nav-item">
               <a class="btn btn-primary ml-lg-3" href="{{route('logout')}}">Log Out</a>
