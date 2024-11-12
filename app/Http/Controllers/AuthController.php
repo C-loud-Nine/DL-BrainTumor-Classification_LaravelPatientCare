@@ -78,7 +78,7 @@ class AuthController extends Controller
         }
 
         // If login fails, redirect back with error
-        abort(403, 'Invalid email or password.');
+        return redirect()->back()->with('error', 'Failed to Log In.');
     }
 
     // Handle user logout

@@ -1,10 +1,7 @@
 <x-header />
 
-
 <!-- Register Section -->
-
-
-<<div class="page-section">
+<div class="page-section">
   <div class="container">
     <h1 class="text-center wow fadeInUp">Register</h1>
     <form class="contact-form mt-5" id="contactForm" method="POST" action="{{ route('registerUser') }}" enctype="multipart/form-data">
@@ -26,11 +23,10 @@
       <label for="confirmPassword">Confirm Password</label>
       <input type="password" id="confirmPassword" class="form-control" name="password_confirmation" placeholder="Confirm Password" required>
       
-      <!-- Password Mismatch Error -->
-      @error('password')
-      <div id="passwordError" class="error-message" style="color: red;">{{ $message }}</div>
-      @enderror
-
+      <!-- Error Messages -->
+      <div id="passwordError" class="error-message" style="display: none;">Passwords do not match.</div>
+      <div id="successMessage" class="success-message" style="display: none;">Registration successful!</div>
+      
       <!-- File Upload Input -->
       <label for="file">Upload Image</label>
       <input type="file" id="file" class="form-control" name="file" accept="image/*" required>
@@ -42,29 +38,20 @@
   </div>
 </div>
 
-
-
-<!-- Footer and Scripts -->
-
-<script src="../assets/js/jquery-3.5.1.min.js"></script>
-<script src="../assets/js/bootstrap.bundle.min.js"></script>
-<script src="../assets/vendor/owl-carousel/js/owl.carousel.min.js"></script>
-<script src="../assets/vendor/wow/wow.min.js"></script>
-<script src="../assets/js/google-maps.js"></script>
-<script src="../assets/js/theme.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
-
 <script>
   document.getElementById('contactForm').addEventListener('submit', function (event) {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const passwordError = document.getElementById('passwordError');
+    const successMessage = document.getElementById('successMessage');
 
     if (password !== confirmPassword) {
       event.preventDefault();  // Prevent form submission
       passwordError.style.display = 'block';
+      successMessage.style.display = 'none';
     } else {
       passwordError.style.display = 'none';
+      successMessage.style.display = 'block';
     }
   });
 
@@ -87,12 +74,7 @@
   });
 </script>
 
-</body>
-
 <x-footer />
-
-
-
 
 <style>
     /* Center the form */
@@ -150,11 +132,18 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
-    /* Error message styling */
+    /* Error and success message styling */
     .error-message {
       color: red;
       font-size: 0.9em;
       margin-top: 5px;
       display: none;
     }
-  </style>
+    
+    .success-message {
+      color: green;
+      font-size: 1em;
+      margin-top: 10px;
+      display: none;
+    }
+</style>
