@@ -19,6 +19,13 @@
   <link rel="stylesheet" href="../assets/vendor/animate/animate.css">
 
   <link rel="stylesheet" href="../assets/css/theme.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMz6N1zBc5i7VgrWxk+nE2k7v4KLKekf5vhT9gO" crossorigin="anonymous">
+
+
+  <!-- Font Awesome for the eye icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMz6N1zBc5i7VgrWxk+nE2k7v4KLKekf5vhT9gO" crossorigin="anonymous">
+
 </head>
 <body>
 
