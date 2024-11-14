@@ -4,8 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+//use Illuminate\Http\Request;
+use Stevebauman\Location\Facades\Location;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    //return $request->ip();
+    request()->ip();
+    $position = Location::get('ip()');
+    return $position->countryName;
     return view('welcome');
 });
 

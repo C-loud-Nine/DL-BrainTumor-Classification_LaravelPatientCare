@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Stevebauman\Location\Facades\Location;
 
 class AuthController extends Controller
 {
@@ -43,7 +44,6 @@ class AuthController extends Controller
         return redirect()->back()->with('error', 'Failed to register user.');
     }
 
-
     // Handle user login
     public function loginUser(Request $request)
     {
@@ -65,16 +65,30 @@ class AuthController extends Controller
                 'user_picture' => $user->picture,
                 'user_type' => $user->type,
             ]);
-            
-            if ($user->type == "user") {
-                return redirect()->route('home')->with('success', 'Login successful!');
-            } else if ($user->type == "admin") {
-                // dd('Admin user logged in, redirecting to admin home');
-                return redirect()->route('admin.adminhome'); // Redirect to the admin home page
+
+           // Get the user's IP address
+                request()->ip();
+                $position = Location::get('ip()');
+
+            // Check if the position was successfully retrieved
+            if ($position) {
+                // Successfully retrieved position
+                // Store the country name or other relevant location data
+                $user->location = $position->countryName;  // You can also use $position->city or other data if needed
+                $user->save();  // Save the user's updated location to the database
+            } else {
+                // Failed retrieving position, set location to 'Unknown'
+                $user->location = 'Unknown';
+                $user->save();
             }
 
 
-    
+            // Redirect based on user type
+            if ($user->type == "user") {
+                return redirect()->route('home')->with('success', 'Login successful!');
+            } else if ($user->type == "admin") {
+                return redirect()->route('admin.adminhome'); // Redirect to the admin home page
+            }
         }
 
         // If login fails, redirect back with error
