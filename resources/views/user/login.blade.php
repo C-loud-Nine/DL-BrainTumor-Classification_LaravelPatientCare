@@ -24,7 +24,13 @@
                 </div>
                 <div class="col-12 py-2 wow fadeInUp">
                     <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+                    <div class="position-relative">
+                        <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
+                        <!-- SVG image button for toggling password visibility -->
+                        <button type="button" class="btn toggle-btn" onclick="togglePasswordVisibility()">
+                            <img id="eyeIcon" src="../assets/img/eye.svg" alt="Toggle Password" class="eye-img">
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -34,6 +40,21 @@
 </div>
 
 <x-footer />
+
+<script>
+  // Toggle password visibility
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeIcon.src = '../assets/img/eye1.svg'; // Switch to eye1.svg when password is visible
+    } else {
+      passwordInput.type = 'password';
+      eyeIcon.src = '../assets/img/eye.svg'; // Switch back to eye.svg when password is hidden
+    }
+  }
+</script>
 
 <style>
     /* Center the form */
@@ -56,15 +77,39 @@
         width: 100%;
     }
 
+    /* Button styling for password toggle */
+    .position-relative {
+        position: relative;
+    }
+    .toggle-btn {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    .toggle-btn:focus {
+        outline: none;
+    }
+
+    /* Eye SVG styling */
+    .eye-img {
+        width: 20px;
+        height: 20px;
+    }
+
     /* Submit button hover effect */
-    .contact-form button {
+    .contact-form button[type="submit"] {
         width: 100%;
         font-size: 16px;
         padding: 12px;
         border-radius: 4px;
         transition: background-color 0.3s;
     }
-    .contact-form button:hover {
+    .contact-form button[type="submit"]:hover {
         background-color: #0056b3;
         color: #fff;
     }
