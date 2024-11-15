@@ -37,7 +37,7 @@ Route::get('/login', [HomeController::class, 'login'])->name('login');
 Route::get('/register', [HomeController::class, 'register'])->name('register');
 
 Route::get('/forget-password', [ForgetPasswordManager::class, 'forgetPassword'])
-    ->name('forget.password');
+    ->name('forget-password');
 
 Route::post('/forget-password', [ForgetPasswordManager::class, 'forgetPasswordPost'])
     ->name('forget.password.post');
@@ -46,3 +46,4 @@ Route::get('/reset-password/{token}', [ForgetPasswordManager::class, 'resetPassw
     ->name('reset.password');
 Route::post('/reset-password', [ForgetPasswordManager::class, 'resetPasswordPost'])
     ->name('reset.password.post');
+
