@@ -9,6 +9,8 @@
                         <div class="card-header">
                             <h4 class="mb-0">Reset Password</h4>
                         </div>
+
+                        <!-- Display Errors -->
                         @if($errors->any())
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -18,19 +20,23 @@
                                 </ul>
                             </div>
                         @endif
+
                         <div class="card-body">
+                            <!-- Success Message -->
                             @if(session('status'))
                                 <div class="alert alert-success">
-                                    {{ session('status') }}
+                                    <strong>Success!</strong> {{ session('status') }}
                                 </div>
                             @endif
 
+                            <!-- Error Message -->
                             @if(session('error'))
                                 <div class="alert alert-danger">
-                                    {{ session('error') }}
+                                    <strong>Error!</strong> {{ session('error') }}
                                 </div>
                             @endif
 
+                            <!-- Reset Password Form -->
                             <form class="contact-form" method="POST" action="{{ route('forget.password.post') }}">
                                 @csrf
 
@@ -67,7 +73,7 @@
     <style>
         /* Custom footer styles */
         footer {
-            padding: 1rem 0 !important; /* Overrides any existing padding */
+            padding: 1rem 0 !important;
             margin-top: auto !important;
             font-size: 0.9rem !important;
         }
@@ -87,6 +93,13 @@
 
         .card {
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        /* Success message styling */
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
         }
 
         /* Fix wow animation conflicts */

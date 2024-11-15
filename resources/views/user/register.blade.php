@@ -9,7 +9,7 @@
       @csrf  <!-- CSRF Token for security -->
 
       <!-- Name Input -->
-      <div class="row mb-3">
+      <div class="row mb-2"> <!-- Reduced margin-bottom -->
         <div class="col-12 py-2 wow fadeInUp">
           <label for="name">Name</label>
           <input type="text" id="name" class="form-control" name="name" placeholder="Name" required>
@@ -17,7 +17,7 @@
       </div>
 
       <!-- Email Input -->
-      <div class="row mb-3">
+      <div class="row mb-2"> <!-- Reduced margin-bottom -->
         <div class="col-12 py-2 wow fadeInUp">
           <label for="email">Email</label>
           <input type="email" id="email" class="form-control" name="email" placeholder="Email" required>
@@ -25,7 +25,7 @@
       </div>
 
       <!-- Password Input -->
-      <div class="row mb-3">
+      <div class="row mb-2"> <!-- Reduced margin-bottom -->
         <div class="col-12 py-2 wow fadeInUp">
           <label for="password">Password</label>
           <div class="position-relative">
@@ -39,7 +39,7 @@
       </div>
 
       <!-- Confirm Password Input -->
-      <div class="row mb-3">
+      <div class="row mb-2"> <!-- Reduced margin-bottom -->
         <div class="col-12 py-2 wow fadeInUp">
           <label for="confirmPassword">Confirm Password</label>
           <div class="position-relative">
@@ -57,7 +57,7 @@
       <div id="successMessage" class="success-message" style="display: none;">Registration successful!</div>
 
       <!-- File Upload Input -->
-      <div class="row mb-3">
+      <div class="row mb-2"> <!-- Reduced margin-bottom -->
         <div class="col-12 py-2 wow fadeInUp">
           <label for="file">Upload Profile Picture</label>
           <input type="file" id="file" class="form-control" name="file" accept="image/*" required>
@@ -141,7 +141,7 @@
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
-    padding: 10px;
+    padding: 8px;  /* Reduced padding for compactness */
     width: 100%;
   }
 
