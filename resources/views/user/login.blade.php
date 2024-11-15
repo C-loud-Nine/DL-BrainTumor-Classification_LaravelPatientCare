@@ -34,6 +34,16 @@
                 </div>
             </div>
 
+            <div class="row mb-3 align-items-center">
+                <div class="col-6 wow fadeInUp">
+                    <!-- Leave empty for alignment -->
+                </div>
+                <div class="col-6 wow fadeInUp forgot-password-link">
+                    <!-- Forgot Password Link -->
+                    <a href="{{ route('forget-password') }}" class="text-primary">Forgot Password?</a>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary wow zoomIn">Login</button>
         </form>
     </div>
@@ -132,10 +142,23 @@
         margin-top: 10px;
     }
 
+    /* Adjust Forgot Password link */
+    .forgot-password-link {
+        text-align: right; /* Align text to the right */
+        margin-left: auto; /* Push to the extreme right */
+    }
+
+    .forgot-password-link a {
+        float: right; /* Float link to the right */
+    }
+
     /* Responsive adjustments */
     @media (max-width: 576px) {
         .contact-form {
             padding: 15px;
+        }
+        .forgot-password-link {
+            padding-right: 0; /* Reset padding for smaller screens */
         }
     }
 </style>
