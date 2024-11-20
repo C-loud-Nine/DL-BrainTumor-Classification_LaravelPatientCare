@@ -41,3 +41,14 @@ Route::get('/forget-password', [ForgetPasswordManager::class, 'forgetPassword'])
 Route::post('/forget-password', [ForgetPasswordManager::class, 'forgetPasswordPost'])->name('forget.password.post');
 Route::get('/reset-password/{token}', [ForgetPasswordManager::class, 'resetPassword'])->name('reset.password');
 Route::post('/reset-password', [ForgetPasswordManager::class, 'resetPasswordPost'])->name('reset.password.post');
+
+
+
+Route::get('/forget-pass1', [ForgetPasswordManager::class, 'showForgetPasswordForm'])->name('forget-pass1');
+Route::post('/verify-user', [ForgetPasswordManager::class, 'verifyUser'])->name('verifyUser');
+Route::post('/send-reset-link', [ForgetPasswordManager::class, 'sendResetLink'])->name('sendResetLink');
+
+
+
+
+

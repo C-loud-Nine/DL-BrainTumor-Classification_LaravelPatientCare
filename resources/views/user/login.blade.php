@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-6 wow fadeInUp forgot-password-link">
                     <!-- Forgot Password Link -->
-                    <a href="{{ route('forget-password') }}" class="text-primary">Forgot Password?</a>
+                    <a href="{{ route('forget-pass1') }}" class="text-primary">Forgot Password?</a>
                 </div>
             </div>
 
