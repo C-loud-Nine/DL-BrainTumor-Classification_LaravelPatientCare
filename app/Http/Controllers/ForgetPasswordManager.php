@@ -13,11 +13,13 @@ use App\Mail\ResetPasswordMail;
 
 class ForgetPasswordManager extends Controller
 {
+    
     // Show forget password form
     public function forgetPassword()
     {
         return view('user.forget-password');
     }
+
 
     // Handle forget password form submission
     public function forgetPasswordPost(Request $request)
@@ -80,6 +82,7 @@ class ForgetPasswordManager extends Controller
     }
 
 
+
     public function verifyUser(Request $request)
     {
         $name = $request->input('name');
@@ -106,25 +109,26 @@ class ForgetPasswordManager extends Controller
     }
     
 
+
     public function sendResetLink(Request $request)
-{
-    $user = User::find($request->input('user_id'));
+    {
+        $user = User::find($request->input('user_id'));
 
-    if ($user) {
-        // Generate password reset link
-        Password::sendResetLink(['email' => $user->email]);
+        if ($user) {
+            // Generate password reset link
+            Password::sendResetLink(['email' => $user->email]);
 
-        return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
+            return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
+        }
+
+        return redirect()->back()->with('error', 'Failed to send reset link.');
     }
 
-    return redirect()->back()->with('error', 'Failed to send reset link.');
-}
 
-
-// Render the forget password form
-public function showForgetPasswordForm()
-{
-    return view('user.forget-pass1');
-}
+    // Render the forget password form
+    public function showForgetPasswordForm()
+    {
+        return view('user.forget-pass1');
+    }
 
 }
