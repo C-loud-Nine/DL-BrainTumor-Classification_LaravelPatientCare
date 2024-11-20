@@ -32,7 +32,7 @@ class ForgetPasswordManager extends Controller
             'token' => $token,
             'created_at' => now()
         ]);
-
+        session(['email' => $request->email]);
         // Send email with reset link
         Mail::send('email.forget-password', ['token' => $token], function ($message) use ($request) {
             $message->to($request->email);
@@ -78,4 +78,53 @@ class ForgetPasswordManager extends Controller
 
         return redirect('/login')->with('status', 'Your password has been changed!');
     }
+
+
+    public function verifyUser(Request $request)
+    {
+        $name = $request->input('name');
+        
+        // Your logic to find the user
+        $user = User::where('name', $name)->first();
+        
+        if ($user) {
+            return response()->json([
+                'success' => true,
+                'user' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'picture' => $user->picture, // Adjust this according to your field
+                ],
+                'message' => 'User successfully verified'
+            ]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'User not found'
+        ]);
+    }
+    
+
+    public function sendResetLink(Request $request)
+{
+    $user = User::find($request->input('user_id'));
+
+    if ($user) {
+        // Generate password reset link
+        Password::sendResetLink(['email' => $user->email]);
+
+        return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
+    }
+
+    return redirect()->back()->with('error', 'Failed to send reset link.');
+}
+
+
+// Render the forget password form
+public function showForgetPasswordForm()
+{
+    return view('user.forget-pass1');
+}
+
 }
