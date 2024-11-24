@@ -149,6 +149,13 @@
                                     <td>{{ $admin->created_at->format('d-m-Y') }}</td>
                                     <td>
 
+                                        <!-- Demote Button -->
+                                        <a href="{{ route('admin.demote', ['id' => $admin->id]) }}" 
+                                        class="btn btn-sm btn-info" 
+                                        onclick="return confirm('Are you sure you want to demote this admin to a user?')">
+                                            Demote
+                                        </a>
+
                                         <!-- Delete Button without Form and CSRF -->
                                         <a href="{{ route('admin.deleteUser', ['id' => $admin->id]) }}" 
                                         class="btn btn-sm btn-danger" 
