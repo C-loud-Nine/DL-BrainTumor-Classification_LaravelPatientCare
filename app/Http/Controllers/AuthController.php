@@ -84,7 +84,7 @@ class AuthController extends Controller
 
 
             // Redirect based on user type
-            if ($user->type == "user") {
+            if ($user->type == "user" || $user->type == "doctor") {
                 return redirect()->route('home')->with('success', 'Login successful!');
             } else if ($user->type == "admin") {
                 return redirect()->route('admin.adminhome'); // Redirect to the admin home page

@@ -23,9 +23,14 @@ Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout');
 Route::get('/adminhome', [AdminController::class, 'adminHome'])->name('admin.adminhome');
 Route::get('/userlist', [AdminController::class, 'userlist'])->name('admin.userlist');
 Route::get('/promote/{id}/{role}', [AdminController::class, 'add_promotion'])->name('admin.promote');
+Route::get('/demote/{id}', [AdminController::class, 'demotion'])->name('admin.demote');
 Route::get('/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 Route::get('/adminlist', [AdminController::class, 'adminlist'])->name('admin.adminlist');
 Route::get('/doctorlist', [AdminController::class, 'doctorlist'])->name('admin.doctorlist');
+
+Route::get('/adminprofile', [AdminController::class, 'adminprofile'])->name('admin.adminprofile');
+Route::post('/adminprofile/update/{id}', [AdminController::class, 'updateAdminProfile'])->name('admin.update');
+Route::get('/adminprofile/delete/{id}', [AdminController::class, 'deleteAdminProfile'])->name('admin.delete');
 
 
 
@@ -33,6 +38,18 @@ Route::get('/doctorlist', [AdminController::class, 'doctorlist'])->name('admin.d
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/login', [HomeController::class, 'login'])->name('login');
 Route::get('/register', [HomeController::class, 'register'])->name('register');
+Route::get('/userprofile', [HomeController::class, 'userprofile'])->name('userprofile');
+Route::post('/userprofile/update/{id}', [HomeController::class, 'updateUserProfile'])->name('user.update');
+Route::get('/userprofile/delete/{id}', [HomeController::class, 'deleteUserProfile'])->name('user.delete');
+
+Route::get('/doctorprofile', [HomeController::class, 'doctorprofile'])->name('doctorprofile');
+Route::post('/doctorprofile/update/{id}', [HomeController::class, 'updateDoctorProfile'])->name('user.updatedoc');
+Route::get('/doctorprofile/delete/{id}', [HomeController::class, 'deleteDoctorProfile'])->name('user.deletedoc');
+
+
+
+
+
 
 
 

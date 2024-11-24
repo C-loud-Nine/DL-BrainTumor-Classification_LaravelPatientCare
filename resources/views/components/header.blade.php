@@ -1,37 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
   <meta name="copyright" content="MACode ID, https://macodeid.com/">
-
   <title>One Health - Medical Center HTML5 Template</title>
 
+  <!-- CSS Links -->
   <link rel="stylesheet" href="../assets/css/maicons.css">
-
   <link rel="stylesheet" href="../assets/css/bootstrap.css">
-
   <link rel="stylesheet" href="../assets/vendor/owl-carousel/css/owl.carousel.css">
-
   <link rel="stylesheet" href="../assets/vendor/animate/animate.css">
-
   <link rel="stylesheet" href="../assets/css/theme.css">
-
+  
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMz6N1zBc5i7VgrWxk+nE2k7v4KLKekf5vhT9gO" crossorigin="anonymous">
-
-
-  <!-- Font Awesome for the eye icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMz6N1zBc5i7VgrWxk+nE2k7v4KLKekf5vhT9gO" crossorigin="anonymous">
-
 </head>
+
 <body>
 
   <!-- Back to top button -->
   <div class="back-to-top"></div>
 
+  <!-- Header Section -->
   <header>
     <div class="topbar">
       <div class="container">
@@ -75,7 +68,7 @@
         <div class="collapse navbar-collapse" id="navbarSupport">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="{{route('home')}}">Home</a>
+              <a class="nav-link" href="{{ route('home') }}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="about.html">About Us</a>
@@ -92,26 +85,37 @@
             <li class="nav-item">
               <a class="nav-link" href="contact.html">Contact</a>
             </li>
-            <?php if(session()->has('user_id')): ?>
-              <li class="nav-item">
-              <a class="btn btn-primary ml-lg-3" href="{{route('home')}}">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="btn btn-primary ml-lg-3" href="{{route('logout')}}">Log Out</a>
-            </li>
-            <?php else: ?>
-            <li class="nav-item">
-              <a class="btn btn-primary ml-lg-3" href="{{route('login')}}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="btn btn-primary ml-lg-3" href="{{route('register')}}">Register</a>
-            </li>
-            <?php endif; ?>
 
-            
+            <!-- User-specific Links -->
+            @if (session('user_type') == 'user')
+              <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3" href="{{ route('userprofile') }}">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3" href="{{ route('logout') }}">Log Out</a>
+              </li>
+            @elseif (session('user_type') == 'doctor')
+              <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3" href="{{ route('doctorprofile') }}">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3" href="{{ route('logout') }}">Log Out</a>
+              </li>
+            @else
+              <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3" href="{{ route('login') }}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3" href="{{ route('register') }}">Register</a>
+              </li>
+            @endif
 
           </ul>
         </div> <!-- .navbar-collapse -->
       </div> <!-- .container -->
     </nav>
   </header>
+
+</body>
+
+</html>

@@ -72,6 +72,14 @@
             </a>
           </li>
           <li class="nav-item menu-items">
+            <a class="nav-link" href="{{ route('admin.adminprofile')}}">
+              <span class="menu-icon">
+                <i class="mdi mdi-table-large"></i>
+              </span>
+              <span class="menu-title">Profile</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
             <a class="nav-link" href="{{route('admin.userlist')}}">
               <span class="menu-icon">
                 <i class="mdi mdi-playlist-play"></i>
