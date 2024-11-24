@@ -3,7 +3,7 @@
 <head>
     @include('admin.css')
     <style>
-        /* Similar styles but adjusted for Doctors */
+        /* Styles for Doctors Table */
         .doctor-table {
             width: 100%;
             border-collapse: collapse;
@@ -27,14 +27,14 @@
             text-transform: uppercase;
         }
 
-        /* Table content styling - Bold text */
+        /* Table content styling */
         .doctor-table td {
             text-align: center;
             padding: 12px 15px;
             border: 1px solid #dddddd;
             vertical-align: middle;
             color: #4d4d4d;
-            font-weight: bold; /* Bold table content */
+            font-weight: bold;
         }
 
         .doctor-table tbody tr:nth-child(even) {
@@ -94,13 +94,13 @@
             transition: background-color 0.3s ease;
         }
 
-        .btn-info {
-            background-color: #28a745;
+        .btn-demote {
+            background-color: #007bff; /* Blue color */
             color: white;
         }
 
-        .btn-info:hover {
-            background-color: #218838;
+        .btn-demote:hover {
+            background-color: #0056b3; /* Darker blue on hover */
         }
 
         .btn-danger {
@@ -149,12 +149,18 @@
                                         <img src="{{ asset('uploads/profile/' . $doc->picture) }}" alt="{{ $doc->name }}" />
                                     </td>
                                     <td>{{ $doc->created_at->format('d-m-Y') }}</td>
-                                   <td>
+                                    <td>
+                                        <!-- Demote Button -->
+                                        <a href="{{ route('admin.demote', ['id' => $doc->id]) }}" 
+                                           class="btn btn-sm btn-demote" 
+                                           onclick="return confirm('Are you sure you want to demote this doctor to a user?')">
+                                            Demote
+                                        </a>
 
-                                        <!-- Delete Button without Form and CSRF -->
+                                        <!-- Delete Button -->
                                         <a href="{{ route('admin.deleteUser', ['id' => $doc->id]) }}" 
-                                        class="btn btn-sm btn-danger" 
-                                        onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                                           class="btn btn-sm btn-danger" 
+                                           onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                                     </td>
                                 </tr>
                             @empty
@@ -170,7 +176,5 @@
     </div>
 
     @include('admin.script')
-
-    
 </body>
 </html>

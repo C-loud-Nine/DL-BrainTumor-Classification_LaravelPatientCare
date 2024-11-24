@@ -43,6 +43,28 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'User promoted successfully.');
     }
 
+
+
+    // Method to promote a user
+    public function demotion($id)
+    {
+        // Find the user by ID
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        $user->type = 'user';
+
+        // Save the updated user
+        $user->save();
+
+        return redirect()->back()->with('success', 'User promoted successfully.');
+    }
+
+
+
     public function deleteUser($id)
     {
         $user = User::find($id);

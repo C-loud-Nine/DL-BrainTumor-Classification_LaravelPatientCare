@@ -23,6 +23,7 @@ Route::get('/logout', [AuthController::class, 'logoutUser'])->name('logout');
 Route::get('/adminhome', [AdminController::class, 'adminHome'])->name('admin.adminhome');
 Route::get('/userlist', [AdminController::class, 'userlist'])->name('admin.userlist');
 Route::get('/promote/{id}/{role}', [AdminController::class, 'add_promotion'])->name('admin.promote');
+Route::get('/demote/{id}', [AdminController::class, 'demotion'])->name('admin.demote');
 Route::get('/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 Route::get('/adminlist', [AdminController::class, 'adminlist'])->name('admin.adminlist');
 Route::get('/doctorlist', [AdminController::class, 'doctorlist'])->name('admin.doctorlist');
