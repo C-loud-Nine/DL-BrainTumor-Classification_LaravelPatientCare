@@ -166,6 +166,8 @@
       display: block;
     }
 
+    
+
     /* Responsive styles */
     @media (max-width: 768px) {
       .profile-header h1 {
@@ -196,6 +198,19 @@
 
   <x-header />
 
+  <!-- Dropdown Menu -->
+  <div class="dropdown" style="position: absolute; top: 140px; right: 120px;">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" 
+      style="background-color: #007bff; border-color: #0056b3; font-size: 1rem; font-weight: bold; color: #fff; border-radius: 8px; padding: 12px 30px; box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2); transition: all 0.3s ease-in-out;">
+      Navigation
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="min-width: 250px; padding: 10px 0; border-radius: 10px; border: 1px solid #ddd; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
+      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">Appointments</a></li>
+      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">Reports</a></li>
+      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">XYZ</a></li>
+    </ul>
+  </div>
+
   <div class="container-scroller">
     <div class="main-panel">
       <div class="content-wrapper">
@@ -215,6 +230,16 @@
               <div class="col">
                 <div class="label">Email:</div>
                 <div class="info">{{ $doc->email }}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="label">Phone :</div>
+                <div class="info">{{ $doc->doctor->phone ?? 'Not Set' }}</div>
+              </div>
+              <div class="col">
+                <div class="label">Specialization :</div>
+                <div class="info">{{ $doc->doctor->specialization ?? 'Not Set' }}</div>
               </div>
             </div>
             <div class="row">
@@ -268,12 +293,27 @@
               <input type="email" class="form-control" id="email" name="email" value="{{ $doc->email }}" disabled>
             </div>
             <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ $doc->doctor ? $doc->doctor->phone : 'N/A' }}">
+        </div>
+        <div class="mb-3">
+            <label for="specialization" class="form-label">Specialization</label>
+            <select class="form-control" id="specialization" name="specialization">
+                <option value="Neurology" {{ $doc->doctor && $doc->doctor->specialization == 'Neurology' ? 'selected' : '' }}>Neurology</option>
+                <option value="Cardiology" {{ $doc->doctor && $doc->doctor->specialization == 'Cardiology' ? 'selected' : '' }}>Cardiology</option>
+                <option value="Ophthalmology" {{ $doc->doctor && $doc->doctor->specialization == 'Ophthalmology' ? 'selected' : '' }}>Ophthalmology</option>
+                <option value="Gynecology" {{ $doc->doctor && $doc->doctor->specialization == 'Gynecology' ? 'selected' : '' }}>Gynecology</option>
+                <option value="Pediatrics" {{ $doc->doctor && $doc->doctor->specialization == 'Pediatrics' ? 'selected' : '' }}>Pediatrics</option>
+            </select>
+        </div>
+
+            <div class="mb-3">
               <label for="location" class="form-label">Location</label>
               <input type="text" class="form-control" id="location" name="location" value="{{ $doc->location ?? '' }}">
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password">
+              <input type="password" class="form-control" id="password" name="password" >
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" id="showPassword">
                 <label class="form-check-label" for="showPassword">Show Password</label>
@@ -295,10 +335,26 @@
   </div>
 
   <x-footer />
+  @include('admin.script')
+
 
   <script>
-    // Show/Hide password toggle
-    document.getElementById('showPassword').addEventListener('change', function() {
+  // JavaScript to add hover effect to the dropdown items
+  const dropdownItems = document.querySelectorAll('.dropdown-item');
+  dropdownItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      item.style.backgroundColor = '#f8f9fa';
+      item.style.color = '#007bff';
+    });
+    item.addEventListener('mouseleave', () => {
+      item.style.backgroundColor = '';
+      item.style.color = '#333';
+    });
+  });
+
+
+   // Show/Hide password toggle
+   document.getElementById('showPassword').addEventListener('change', function() {
       const passwordField = document.getElementById('password');
       if (this.checked) {
         passwordField.type = 'text';
@@ -322,8 +378,13 @@
         reader.readAsDataURL(file);
       }
     }
-  </script>
+</script>
 
-  @include('admin.script')
+  <script src="../assets/js/jquery-3.5.1.min.js"></script>
+  <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+  <script src="../assets/vendor/wow/wow.min.js"></script>
+  <script src="../assets/js/theme.js"></script>
+
 </body>
 </html>
