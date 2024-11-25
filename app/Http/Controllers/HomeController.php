@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -108,59 +108,133 @@ class HomeController extends Controller
 
 
     
-      public function doctorprofile()
-      {
-          // Retrieve the currently authenticated user using session
-          if (!session()->has('user_id')) {
-              return redirect()->route('login')->with('error', 'Please log in to view your profile.');
-          }
+//       public function doctorprofile()
+//       {
+//           // Retrieve the currently authenticated user using session
+//           if (!session()->has('user_id')) {
+//               return redirect()->route('login')->with('error', 'Please log in to view your profile.');
+//           }
    
-          $doc = User::find(session('user_id'));
+//           $doc = User::find(session('user_id'));
    
-          return view('user.doctorprofile', compact('doc'));
-      }
+//           return view('user.doctorprofile', compact('doc'));
+//       }
    
     
-      public function updateDoctorProfile(Request $request, $id)
-      {
+//       public function updateDoctorProfile(Request $request, $id)
+//       {
    
        
    
-          // Validate input
-       $request->validate([
-           'name' => 'required|string|max:255',
-           'location' => 'nullable|string|max:255',
-           'password' => 'nullable|string|min:8',
-           'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-       ]);
+//           // Validate input
+//        $request->validate([
+//            'name' => 'required|string|max:255',
+//            'location' => 'nullable|string|max:255',
+//            'password' => 'nullable|string|min:8',
+//            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+//        ]);
    
-       // Find the user
-       $doc = User::findOrFail($id);
+//        // Find the user
+//        $doc = User::findOrFail($id);
    
-       // Update user fields
-       $doc->name = $request->name;
-       $doc->location = $request->location;
+//        // Update user fields
+//        $doc->name = $request->name;
+//        $doc->location = $request->location;
    
-       // Update password if provided
-       if ($request->filled('password')) {
-           $doc->password = Hash::make($request->password);
-       }
+//        // Update password if provided
+//        if ($request->filled('password')) {
+//            $doc->password = Hash::make($request->password);
+//        }
    
-       // Handle profile picture upload
-       if ($request->hasFile('profile_picture')) {
-           $file = $request->file('profile_picture');
-           $filename = time() . '.' . $file->getClientOriginalExtension();
-           $file->move(public_path('uploads/profile'), $filename);
-           $doc->picture = $filename;
-       }
+//        // Handle profile picture upload
+//        if ($request->hasFile('profile_picture')) {
+//            $file = $request->file('profile_picture');
+//            $filename = time() . '.' . $file->getClientOriginalExtension();
+//            $file->move(public_path('uploads/profile'), $filename);
+//            $doc->picture = $filename;
+//        }
    
-       // Save the user
-       $doc->save();
+//        // Save the user
+//        $doc->save();
    
-       // Redirect with success message
-       return redirect()->back()->with('success', 'Profile updated successfully!');
+//        // Redirect with success message
+//        return redirect()->back()->with('success', 'Profile updated successfully!');
       
-   }
+//    }
+
+
+
+public function doctorprofile()
+{
+    // Retrieve the currently authenticated user using session
+    if (!session()->has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please log in to view your profile.');
+    }
+
+    // Fetch the user's doctor data
+    $doc = User::with('doctor')->find(session('user_id'));
+
+    return view('user.doctorprofile', compact('doc'));
+}
+
+
+
+public function updateDoctorProfile(Request $request, $id)
+{
+    // Validate input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'phone' => 'nullable|string|max:15',
+        'specialization' => 'nullable|string|max:255',
+        'room' => 'nullable|string|max:50',
+        'appointment' => 'nullable|string|max:255',
+        'rating' => 'nullable|numeric|min:0|max:5',
+        'password' => 'nullable|string|min:8',
+        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Find the user
+    $doc = User::findOrFail($id);
+
+    // Update user fields
+    $doc->name = $request->name;
+
+    // Find the doctor profile (create one if it doesn't exist)
+    $doctor = $doc->doctor ?? new Doctor(); // If doctor doesn't exist, create a new one
+
+    // Retrieve the name from the user table and set it in the doctor's profile
+    $doctor->name = $doc->name;  // Retrieve name from the user table and assign it
+
+    // Update doctor details
+    $doctor->phone = $request->phone;
+    $doctor->specialization = $request->specialization;
+    $doctor->room = $request->room;
+    $doctor->appointment = $request->appointment;
+    $doctor->rating = $request->rating;
+
+    // Update password if provided
+    if ($request->filled('password')) {
+        $doc->password = Hash::make($request->password);
+    }
+
+    // Handle profile picture upload
+    if ($request->hasFile('profile_picture')) {
+        $file = $request->file('profile_picture');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/profile'), $filename);
+        $doc->picture = $filename;
+    }
+
+    // Save the user and doctor data
+    $doc->save();
+    $doctor->user_id = $doc->id;  // Set the user_id before saving the doctor
+    $doctor->save();
+
+    // Redirect with success message
+    return redirect()->back()->with('success', 'Profile updated successfully!');
+}
+
+
    
       /**
        * Delete the user's profile.
