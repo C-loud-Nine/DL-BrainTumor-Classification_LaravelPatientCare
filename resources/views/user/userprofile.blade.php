@@ -196,6 +196,20 @@
 
   <x-header />
 
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown" style="position: absolute; top: 140px; right: 120px;">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" 
+      style="background-color: #007bff; border-color: #0056b3; font-size: 1rem; font-weight: bold; color: #fff; border-radius: 8px; padding: 12px 30px; box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2); transition: all 0.3s ease-in-out;">
+      Navigation
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="min-width: 250px; padding: 10px 0; border-radius: 10px; border: 1px solid #ddd; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
+      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">Appointments</a></li>
+      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">Reports</a></li>
+      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">XYZ</a></li>
+    </ul>
+  </div>
+
   <div class="container-scroller">
     <div class="main-panel">
       <div class="content-wrapper">
