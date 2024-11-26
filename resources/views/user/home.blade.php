@@ -67,7 +67,7 @@
 
       
       
-      <!-- @include('user.doctor')
+      @include('user.doctor')
 
 
       
@@ -76,7 +76,7 @@
 
   
   
-      @include('user.appointment') -->
+      @include('user.appointment')
 
  
 
