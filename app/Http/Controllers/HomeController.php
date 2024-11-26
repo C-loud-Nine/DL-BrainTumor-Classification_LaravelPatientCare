@@ -8,11 +8,26 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    // public function index()
+    // {
+    //     return view('user.home');
+    // }
+
+
+
     public function index()
     {
-        return view('user.home');
+        // Retrieve users of type 'doctor' with their associated doctor information
+        $doctors = User::with('doctor')
+            ->where('type', 'doctor')
+            ->get();
+
+        // Pass the data to the view
+        return view('user.home', compact('doctors'));
     }
 
+    
+    
     public function login()
     {
         return view('user.login');
