@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doctor Slideshow</title>
-  <link rel="stylesheet" href="path-to-owl-carousel.css"> <!-- Include Owl Carousel CSS -->
-  <style>
+
+<style>
     /* Styling for the doctor cards */
     .card-doctor {
       background: #ffffff;
