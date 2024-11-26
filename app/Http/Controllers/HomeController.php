@@ -278,4 +278,19 @@ public function updateDoctorProfile(Request $request, $id)
 
 
 
+      public function doctorinfo()
+      {
+          // Retrieve users of type 'doctor' with their associated doctor information
+          $doctors = User::with('doctor')
+              ->where('type', 'doctor')
+              ->get();
+  
+          // Pass the data to the view
+          return view('user.doctorinfo', compact('doctors'));
+      }
+
+
+
+
+
 }

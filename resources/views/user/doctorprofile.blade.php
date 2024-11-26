@@ -88,43 +88,64 @@
       color: #555;
     }
 
-    /* Button styles */
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 30px;
-    }
+/* Button container styles */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 20px; /* Added gap for better spacing between buttons */
+}
 
-    .btn {
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
+/* General button styles */
+.btn {
+  padding: 12px 25px; /* Increased padding for better button size */
+  border-radius: 8px; /* Smoother rounded corners */
+  font-size: 1.1rem; /* Slightly larger font size */
+  font-weight: bold; /* Make the font bold by default */
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease; /* Smooth transition for hover, focus, and active states */
+}
 
-    .btn-edit {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      transition: background-color 0.3s;
-    }
+/* Edit button styles (Always blue) */
+.btn-edit {
+  background-color: #007bff; /* Primary blue */
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Soft shadow for depth */
+}
 
-    .btn-edit:hover {
-      background-color: #0056b3;
-    }
+.btn-edit:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); /* Increased shadow intensity */
+  transform: translateY(-3px); /* Slight lift effect */
+}
 
-    .btn-delete {
-      background-color: #dc3545;
-      color: #fff;
-      text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
+.btn-edit:active {
+  background-color: #004085; /* Even darker blue when clicked */
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Softer shadow when clicked */
+  transform: translateY(0); /* Return to normal position */
+}
 
-    .btn-delete:hover {
-      background-color: #c82333;
-    }
+/* Delete button styles (Always red) */
+.btn-delete {
+  background-color: #dc3545; /* Red background for delete */
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2); /* Soft shadow for depth */
+}
+
+.btn-delete:hover {
+  background-color: #c82333; /* Darker red on hover */
+  box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3); /* Increased shadow intensity */
+  transform: translateY(-3px); /* Slight lift effect */
+}
+
+.btn-delete:active {
+  background-color: #bd2130; /* Darker red when clicked */
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2); /* Softer shadow when clicked */
+  transform: translateY(0);
+  color: #fff; /* Ensure text is white */
+}
+
 
     /* Modal styles */
     .modal-content {
@@ -293,9 +314,9 @@
               <input type="email" class="form-control" id="email" name="email" value="{{ $doc->email }}" disabled>
             </div>
             <div class="mb-3">
-            <label for="phone" class="form-label">Phone</label>
-            <input type="text" class="form-control" id="phone" name="phone" value="{{ $doc->doctor ? $doc->doctor->phone : 'N/A' }}">
-        </div>
+              <label for="phone" class="form-label">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone" value="{{ $doc->doctor ? $doc->doctor->phone : 'N/A' }}">
+          </div>
         <div class="mb-3">
             <label for="specialization" class="form-label">Specialization</label>
             <select class="form-control" id="specialization" name="specialization">
