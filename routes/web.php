@@ -46,6 +46,11 @@ Route::get('/doctorprofile', [HomeController::class, 'doctorprofile'])->name('do
 Route::post('/doctorprofile/update/{id}', [HomeController::class, 'updateDoctorProfile'])->name('user.updatedoc');
 Route::get('/doctorprofile/delete/{id}', [HomeController::class, 'deleteDoctorProfile'])->name('user.deletedoc');
 
+Route::get('/doctorinfo', [HomeController::class, 'doctorinfo'])->name('doctorinfo');
+
+
+
+
 
 
 
