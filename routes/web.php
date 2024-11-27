@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ForgetPasswordManager;
 
+
 Route::get('/', function (Request $request) {
     $position = Location::get('ip()');
     return $position->countryName;
@@ -33,6 +34,12 @@ Route::post('/adminprofile/update/{id}', [AdminController::class, 'updateAdminPr
 Route::get('/adminprofile/delete/{id}', [AdminController::class, 'deleteAdminProfile'])->name('admin.delete');
 
 
+// Specialization management routes using AdminController
+Route::get('/adminspecial', [AdminController::class, 'adminspecial'])->name('admin.adminspecial'); // Show specialization management page
+Route::post('/specializations', [AdminController::class, 'storeSpecialization'])->name('admin.storeSpecialization'); // Add a new specialization
+Route::delete('/specializations/{id}', [AdminController::class, 'destroySpecialization'])->name('admin.destroySpecialization'); // Delete specialization
+
+
 
 // Define home route with name
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -47,6 +54,7 @@ Route::post('/doctorprofile/update/{id}', [HomeController::class, 'updateDoctorP
 Route::get('/doctorprofile/delete/{id}', [HomeController::class, 'deleteDoctorProfile'])->name('user.deletedoc');
 
 Route::get('/doctorinfo', [HomeController::class, 'doctorinfo'])->name('doctorinfo');
+
 
 
 

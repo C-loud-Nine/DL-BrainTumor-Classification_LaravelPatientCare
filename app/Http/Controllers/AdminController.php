@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Specialization;
 
 class AdminController extends Controller
 {
@@ -153,5 +154,39 @@ class AdminController extends Controller
         return redirect()->route('login')->with('success', 'Profile deleted successfully.');
     }
 
+    
+    
+    // Show specialization management page
+    public function adminspecial()
+    {
+        // Get all specializations from the database
+        $specializations = Specialization::all();
+
+        // Pass them to the view
+        return view('admin.adminspecial', compact('specializations'));
+    }
+
+    // Store a new specialization
+    public function storeSpecialization(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:specializations,name', // Ensure uniqueness
+        ]);
+
+        $specialization = new Specialization;
+        $specialization->name = $request->name;
+        $specialization->save();
+
+        return redirect()->route('admin.adminspecial')->with('success', 'Specialization added successfully.');
+    }
+
+    // Delete a specialization
+    public function destroySpecialization($id)
+    {
+        $specialization = Specialization::findOrFail($id);
+        $specialization->delete();
+
+        return redirect()->route('admin.adminspecial')->with('success', 'Specialization deleted successfully.');
+    }
 
 }

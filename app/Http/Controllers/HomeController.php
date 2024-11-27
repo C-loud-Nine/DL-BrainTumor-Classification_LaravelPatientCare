@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Doctor;
+use App\Models\Specialization;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -179,17 +180,35 @@ class HomeController extends Controller
 
 
 
+// public function doctorprofile()
+// {
+//     // Retrieve the currently authenticated user using session
+//     if (!session()->has('user_id')) {
+//         return redirect()->route('login')->with('error', 'Please log in to view your profile.');
+//     }
+
+//     // Fetch the user's doctor data
+//     $doc = User::with('doctor')->find(session('user_id'));
+
+//     return view('user.doctorprofile', compact('doc'));
+// }
+
+
+
 public function doctorprofile()
 {
-    // Retrieve the currently authenticated user using session
+    // Ensure the user is logged in
     if (!session()->has('user_id')) {
         return redirect()->route('login')->with('error', 'Please log in to view your profile.');
     }
 
-    // Fetch the user's doctor data
+    // Fetch the logged-in user's data
     $doc = User::with('doctor')->find(session('user_id'));
 
-    return view('user.doctorprofile', compact('doc'));
+    // Get the list of specializations from the database
+    $specializations = Specialization::all();
+
+    return view('user.doctorprofile', compact('doc', 'specializations'));
 }
 
 
