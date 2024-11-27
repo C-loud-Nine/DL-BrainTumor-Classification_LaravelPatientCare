@@ -67,7 +67,7 @@
 
       
       
-      @include('user.doctor')
+      <!-- @include('user.doctor') -->
 
 
       
