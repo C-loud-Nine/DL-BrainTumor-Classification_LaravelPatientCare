@@ -79,15 +79,17 @@
             <li class="nav-item">
               <a class="nav-link" href="blog.html">News</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="blog.html">MRI Scan</a>
-            </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="contact.html">Contact</a>
             </li>
 
             <!-- User-specific Links -->
+             
             @if (session('user_type') == 'user')
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('usermri') }}">MRI Scan</a>
+            </li>
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('userprofile') }}">Profile</a>
               </li>
@@ -95,6 +97,9 @@
                 <a class="btn btn-primary ml-lg-3" href="{{ route('logout') }}">Log Out</a>
               </li>
             @elseif (session('user_type') == 'doctor')
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('doctormri') }}">MRI Scan</a>
+            </li>
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('doctorprofile') }}">Profile</a>
               </li>
@@ -102,6 +107,9 @@
                 <a class="btn btn-primary ml-lg-3" href="{{ route('logout') }}">Log Out</a>
               </li>
             @else
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('usermri') }}">MRI Scan</a>
+            </li>
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('login') }}">Login</a>
               </li>

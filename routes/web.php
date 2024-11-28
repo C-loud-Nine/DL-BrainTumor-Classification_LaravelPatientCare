@@ -5,6 +5,23 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ForgetPasswordManager;
+use App\Http\Controllers\ImageUploadController;
+
+
+
+Route::get('/usermri', [ImageUploadController::class, 'usermri'])->name('usermri');
+Route::post('/usermri/predict', [ImageUploadController::class, 'uploadAndPredict'])->name('upload.predict');
+
+Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+
+
+Route::get('/doctormri', [ImageUploadController::class, 'doctormri'])->name('doctormri');
+Route::post('/doctormri/doctorScanReport', [ImageUploadController::class, 'doctorScanReport'])->name('doctorScanReport');
+
+
+Route::get('/userreportlist', [ImageUploadController::class, 'userreportlist'])->name('userreportlist');
+Route::post('/userreportlist/delete', [ImageUploadController::class, 'deleteReport'])->name('deleteReport');
+
 
 
 Route::get('/', function (Request $request) {
