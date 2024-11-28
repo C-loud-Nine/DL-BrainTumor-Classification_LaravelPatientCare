@@ -165,7 +165,63 @@
     .preview-img.show {
       display: block;
     }
+    
 
+         /* Sidebar container styling */
+  .sidebar {
+    position: fixed;
+    top: 140px; /* Align with existing position */
+    right: 100px;
+    width: 220px;
+    padding: 15px 10px;
+    background-color: #f8f9fa; /* Light background */
+    border: 5px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    z-index: 1000; /* Ensure it stays on top */
+    transition: all 0.3s ease;
+    border-color: #63628B; /* Primary blue border color */
+  }
+
+  /* Sidebar menu items */
+  .sidebar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Individual sidebar links */
+  .sidebar-link {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+
+  /* Hover effects for links */
+  .sidebar-link:hover {
+    background-color: #63628B; /* Primary blue */
+    color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
+  }
+
+  /* Responsive behavior */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%; /* Full width for smaller screens */
+      right: 0;
+      top: 100px;
+      padding: 20px;
+    }
+
+    .sidebar-link {
+      text-align: center; /* Center align for smaller screens */
+    }
+  }
     /* Responsive styles */
     @media (max-width: 768px) {
       .profile-header h1 {
@@ -197,18 +253,14 @@
   <x-header />
 
 
-  <!-- Dropdown Menu -->
-  <div class="dropdown" style="position: absolute; top: 140px; right: 120px;">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" 
-      style="background-color: #007bff; border-color: #0056b3; font-size: 1rem; font-weight: bold; color: #fff; border-radius: 8px; padding: 12px 30px; box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2); transition: all 0.3s ease-in-out;">
-      Navigation
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="min-width: 250px; padding: 10px 0; border-radius: 10px; border: 1px solid #ddd; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
-      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">Appointments</a></li>
-      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">Reports</a></li>
-      <li><a class="dropdown-item" href="#" style="font-size: 1rem; padding: 12px 25px; color: #333; font-weight: 500; transition: all 0.3s ease-in-out;">XYZ</a></li>
-    </ul>
-  </div>
+  
+  <div class="sidebar" id="sidebar">
+  <ul class="sidebar-menu">
+    <li><a href="#" class="sidebar-link">Appointments</a></li>
+    <li><a href="{{ route('userreportlist') }}" class="sidebar-link">Reports</a></li>
+    <li><a href="#" class="sidebar-link">XYZ</a></li>
+  </ul>
+</div>
 
   <div class="container-scroller">
     <div class="main-panel">
