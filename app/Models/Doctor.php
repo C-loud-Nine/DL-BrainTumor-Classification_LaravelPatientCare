@@ -10,14 +10,20 @@ class Doctor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'name', 'phone', 'specialization', 'room', 'appointment', 'rating'
+        'user_id', 'name', 'phone', 'specialization', 'room', 'appointment', 'rating', 'rating_count'
     ];
 
-    // The 'user' relationship is defined, assuming each doctor belongs to a user
+    // Relationship: A doctor belongs to a user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // You can add additional methods for your business logic if needed
+    // Relationship: A doctor has many ratings
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    
 }

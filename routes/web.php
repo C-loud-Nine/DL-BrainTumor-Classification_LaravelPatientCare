@@ -9,26 +9,28 @@ use App\Http\Controllers\ImageUploadController;
 
 
 
+
+
+// Define routes for image upload and prediction
+
 Route::get('/usermri', [ImageUploadController::class, 'usermri'])->name('usermri');
 Route::post('/usermri/predict', [ImageUploadController::class, 'uploadAndPredict'])->name('upload.predict');
-
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-
-
 Route::get('/doctormri', [ImageUploadController::class, 'doctormri'])->name('doctormri');
 Route::post('/doctormri/doctorScanReport', [ImageUploadController::class, 'doctorScanReport'])->name('doctorScanReport');
-
-
 Route::get('/userreportlist', [ImageUploadController::class, 'userreportlist'])->name('userreportlist');
 Route::post('/userreportlist/delete', [ImageUploadController::class, 'deleteReport'])->name('deleteReport');
 
 
 
-Route::get('/', function (Request $request) {
-    $position = Location::get('ip()');
-    return $position->countryName;
-    return view('welcome');
-});
+// Route::get('/', function (Request $request) {
+//     $position = Location::get('ip()');
+//     return $position->countryName;
+//     return view('welcome');
+// });
+
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Define routes for authentication
 Route::post('/register', [AuthController::class, 'registerUser'])->name('registerUser');
@@ -70,10 +72,17 @@ Route::get('/doctorprofile', [HomeController::class, 'doctorprofile'])->name('do
 Route::post('/doctorprofile/update/{id}', [HomeController::class, 'updateDoctorProfile'])->name('user.updatedoc');
 Route::get('/doctorprofile/delete/{id}', [HomeController::class, 'deleteDoctorProfile'])->name('user.deletedoc');
 
+
+
+// Define routes for doctor management
+
 Route::get('/doctorinfo', [HomeController::class, 'doctorinfo'])->name('doctorinfo');
+Route::get('/doctorinfo/{id}', [HomeController::class, 'fetchDoctor'])->name('fetchDoctor');
+Route::post('/doctorinfo/rate', [HomeController::class, 'rateDoctor'])->name('rateDoctor');
 
 
 
+Route::get('/fetch-doctor/{id}', [HomeController::class, 'fetchDoctor'])->name('fetchDoctor');
 
 
 

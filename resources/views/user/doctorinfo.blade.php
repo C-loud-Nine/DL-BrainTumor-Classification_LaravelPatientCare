@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doctors</title>
   <style>
@@ -189,6 +190,73 @@
     }
 
 
+    /* Modal Styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+}
+
+.modal .close:hover {
+  color: #007bff;
+}
+
+/* Style for rating section */
+#modalRating {
+  margin-top: 20px;
+}
+
+#rating {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  outline: none;
+  background-color: #f8f9fa;
+}
+
+#submitRating {
+  display: block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
+  width: 100%;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#submitRating:hover {
+  background-color: #0056b3;
+}
+
+
     /* Responsive Design */
     @media (max-width: 992px) {
       .doctor-container {
@@ -204,6 +272,8 @@
   </style>
 </head>
 <body>
+
+
 
 <div class="page-header">
   <h1>Our Doctors</h1>
@@ -224,7 +294,7 @@
 
 <!-- Doctor Cards Section -->
 <div class="doctor-container" id="doctorContainer">
-  @foreach ($doctors as $doctor)
+@foreach ($doctors as $doctor)
   <div class="card-doctor" data-specialization="{{ $doctor->doctor->specialization ?? 'N/A' }}">
     <div class="header">
       <img src="{{ $doctor->picture ? asset('uploads/profile/' . $doctor->picture) : asset('default-profile.png') }}" alt="Doctor Image">
@@ -243,35 +313,152 @@
         </span>
         <span class="rating-value">({{ $doctor->doctor->rating ?? 'N/A' }})</span>
       </div>
-      <a href="profile.html" class="btn-readmore">Read More</a>
+      <button class="btn-readmore" data-id="{{ $doctor->id }}">Read More</button>
     </div>
   </div>
-  @endforeach
+@endforeach
+</div>
+
+<!-- Modal for doctor info -->
+<div id="doctorModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalDoctorName"></h2>
+    <p id="modalSpecialization"></p>
+    <p id="modalPhone"></p>
+    <div id="modalRating">
+      <label for="rating">Rate this Doctor:</label>
+      <select id="rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <span id="ratingCount">(0 Ratings)</span>
+      <button id="submitRating" data-id="">Submit</button>
+    </div>
+  </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('doctorModal');
+    const closeModal = document.querySelector('.modal .close');
+    const doctorCards = document.querySelectorAll('.btn-readmore');
+    const submitRating = document.getElementById('submitRating');
+    const ratingInput = document.getElementById('rating');
+    const doctorIdInput = document.getElementById('submitRating');
+
+    // Event listener for the "Read More" button
+    doctorCards.forEach(button => {
+        button.addEventListener('click', function () {
+            const doctorId = this.getAttribute('data-id');
+
+            // Send the fetch request to get the doctor details
+            fetch(`/fetch-doctor/${doctorId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Doctor not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Populate modal with doctor data
+                    document.getElementById('modalDoctorName').textContent = data.name;
+                    document.getElementById('modalSpecialization').textContent = `Specialization: ${data.specialization}`;
+                    document.getElementById('modalPhone').textContent = `Phone: ${data.phone}`;
+                    document.getElementById('ratingCount').textContent = `(${data.rating_count} Ratings)`;
+                    document.getElementById('rating').value = data.rating;
+                    submitRating.setAttribute('data-id', doctorId); // Set doctor ID in the button
+
+                    // Show modal
+                    modal.style.display = 'flex';
+                })
+                .catch(error => {
+                    alert('Error fetching doctor details: ' + error.message);
+                    modal.style.display = 'none'; // Hide modal on error
+                });
+        });
+    });
+
+    // Close modal
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none'; // Close modal
+    });
+
+    
+ submitRating.addEventListener('click', function () {
+    const doctorId = this.getAttribute('data-id');
+    const rating = ratingInput.value;
+
+    console.log('Submitting rating for doctorId:', doctorId, 'Rating:', rating);
+
+    // Send POST request with fetch (no jQuery)
+    fetch('/doctorinfo/rate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            doctor_id: doctorId,
+            rating: rating
+        })
+    })
+    .then(response => {
+        if (response.status === 302) {
+            // Handle the redirect (user needs to log in)
+            window.location.href = '/login';  // Adjust URL to your login page
+            throw new Error('Redirecting to login');  // Prevent further processing
+        }
+
+        // Attempt to parse the JSON response
+        return response.text();  // Read the response as text
+    })
+    .then(text => {
+        try {
+            const data = JSON.parse(text);  // Attempt to parse it as JSON
+            console.log('Response Data:', data);  // Log the parsed response
+            if (data.message) {
+                alert(data.message);  // Show success message
+                modal.style.display = 'none'; // Close the modal after submitting the rating
+            } else if (data.error) {
+                alert(data.error); // Show error message if no message is present
+            }
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            alert('Error processing response. Please try again later.');
+        }
+    })
+    .catch(error => {
+        console.error('Fetch Error:', error);
+        alert('Error submitting rating. Please try again later.');
+    });
+});
+
+
+
+
+    // Specialization filter
     const filterDropdown = document.getElementById('specializationFilter');
     const doctorContainer = document.getElementById('doctorContainer');
-    const doctorCards = doctorContainer.querySelectorAll('.card-doctor');
+    const doctorCardsAll = doctorContainer.querySelectorAll('.card-doctor');
 
-    // Event listener for the filter dropdown
     filterDropdown.addEventListener('change', function () {
-      const selectedSpecialization = this.value;
+        const selectedSpecialization = this.value;
 
-      doctorCards.forEach(card => {
-        const specialization = card.getAttribute('data-specialization');
-        if (selectedSpecialization === 'all' || specialization === selectedSpecialization) {
-          card.style.display = ''; // Show the card
-        } else {
-          card.style.display = 'none'; // Hide the card
-        }
-      });
+        doctorCardsAll.forEach(card => {
+            const specialization = card.getAttribute('data-specialization');
+            if (selectedSpecialization === 'all' || specialization === selectedSpecialization) {
+                card.style.display = ''; // Show the card
+            } else {
+                card.style.display = 'none'; // Hide the card
+            }
+        });
     });
-  });
+});
 </script>
 
-</body>
-</html>
 
-<x-footer />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

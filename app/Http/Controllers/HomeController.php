@@ -14,7 +14,7 @@ class HomeController extends Controller
     //     return view('user.home');
     // }
 
-
+    
 
     public function index()
     {
@@ -296,17 +296,103 @@ public function updateDoctorProfile(Request $request, $id)
       }
 
 
+// Fetch and display all doctors
+public function doctorinfo()
+{
+    // Retrieve users of type 'doctor' with their associated doctor information
+    $doctors = User::with('doctor')->where('type', 'doctor')->get();
 
-      public function doctorinfo()
-      {
-          // Retrieve users of type 'doctor' with their associated doctor information
-          $doctors = User::with('doctor')
-              ->where('type', 'doctor')
-              ->get();
-  
-          // Pass the data to the view
-          return view('user.doctorinfo', compact('doctors'));
-      }
+    // Pass to the view
+    return view('user.doctorinfo', compact('doctors'));
+}
+
+public function fetchDoctor($id)
+{
+
+    // Check if session contains the user ID and ensure user ID matches the session
+    if (!session()->has('user_id')) {
+        return redirect()->route('login')->with('error', 'Unauthorized access. Please log in.');
+    }
+    // Find the doctor by user ID and load associated doctor information
+    $doctor = User::with('doctor')->where('type', 'doctor')->find($id);
+
+    if (!$doctor || !$doctor->doctor) {
+        return response()->json(['error' => 'Doctor not found'], 404);
+    }
+
+    // Return doctor details as JSON
+    return response()->json([
+        'name' => $doctor->doctor->name ?? 'N/A',
+        'specialization' => $doctor->doctor->specialization ?? 'N/A',
+        'phone' => $doctor->doctor->phone ?? 'N/A',
+        'rating' => $doctor->doctor->rating ?? 0,
+        'rating_count' => $doctor->doctor->rating_count ?? 0,
+    ]);
+}
+
+
+public function rateDoctor(Request $request)
+{
+    \Log::info('Incoming Request:', $request->all());
+
+    try {
+        
+
+        // Validate the request
+        $request->validate([
+            'doctor_id' => 'required|exists:doctors,user_id',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        \Log::info('Validation passed.');
+
+        // Find the doctor using user_id
+        $doctor = Doctor::where('user_id', $request->doctor_id)->first();
+
+        if (!$doctor) {
+            \Log::error("Doctor with user_id {$request->doctor_id} not found.");
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
+
+        // Calculate the new rating
+        $totalRatings = $doctor->rating_count ?? 0;
+        $currentRating = $doctor->rating ?? 0;
+
+        $newTotalRatings = $totalRatings + 1;
+        $newRating = (($currentRating * $totalRatings) + $request->rating) / $newTotalRatings;
+
+        \Log::info("New rating calculated for Doctor with user_id {$request->doctor_id}: $newRating");
+
+        // Update doctor record
+        $doctor->rating = $newRating;
+        $doctor->rating_count = $newTotalRatings;
+        $doctor->save();
+
+        \Log::info("Doctor with user_id {$request->doctor_id} updated successfully.");
+
+        // Return success response
+        return response()->json(['message' => 'Rating submitted successfully'], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        \Log::error('Validation failed:', $e->errors());
+        return response()->json(['error' => 'Validation failed', 'details' => $e->errors()], 422);
+    } catch (ModelNotFoundException $e) {
+        \Log::error('Doctor not found: ' . $e->getMessage());
+        return response()->json(['error' => 'Doctor not found'], 404);
+    } catch (\Exception $e) {
+        \Log::error('Unexpected error:', ['message' => $e->getMessage()]);
+        return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+    }
+}
+
+
+
+
+
+
+
+
+   
 
 
 
