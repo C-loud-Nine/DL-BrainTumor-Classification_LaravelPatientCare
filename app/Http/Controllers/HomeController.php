@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Doctor;
+use App\Models\Appointment;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
 
@@ -22,9 +23,9 @@ class HomeController extends Controller
         $doctors = User::with('doctor')
             ->where('type', 'doctor')
             ->get();
-
+        $doctor = Doctor::all();
         // Pass the data to the view
-        return view('user.home', compact('doctors'));
+        return view('user.home', compact('doctors', 'doctor'));
     }
 
     
@@ -308,6 +309,22 @@ public function updateDoctorProfile(Request $request, $id)
           return view('user.doctorinfo', compact('doctors'));
       }
 
+
+      public function appointment(Request $request){
+            $data = new appointment;
+            $data->name = $request->name;
+            $data->email = $request->email;
+            $data->phone = $request->phone;
+            $data->doctor = $request->doctor;
+            $data->date = $request->date;
+            $data->message = $request->message;
+            $data->status = 'pending';
+            if(session()->has('user_id')){
+                $data->user_id = session('user_id');
+            }
+            $data->save();
+            return redirect()->back()->with('success', 'Appointment request sent successfully!');
+      }
 
 
 
