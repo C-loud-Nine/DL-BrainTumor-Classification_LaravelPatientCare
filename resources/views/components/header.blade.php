@@ -83,6 +83,7 @@
             <li class="nav-item">
               <a class="nav-link" href="contact.html">Contact</a>
             </li>
+  
 
             <!-- User-specific Links -->
              
@@ -90,6 +91,10 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('usermri') }}">MRI Scan</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('appointment') }}">Appointment</a>
+            </li>
+
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('userprofile') }}">Profile</a>
               </li>
