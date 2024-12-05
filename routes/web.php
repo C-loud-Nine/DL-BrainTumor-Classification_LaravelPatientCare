@@ -104,5 +104,7 @@ Route::post('/send-reset-link', [ForgetPasswordManager::class, 'sendResetLink'])
 
 
 
+//Appointment routes
+Route::post('/appointment', [HomeController::class, 'appointment'])->name('appointment');
 
 
