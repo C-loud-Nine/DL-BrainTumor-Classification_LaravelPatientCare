@@ -442,4 +442,18 @@ public function getAllDoctors() {
 
 
 
+public function userAppointments(Request $request)
+    {
+        // Retrieve user_id from session
+        $userId = $request->session()->get('user_id');
+
+        // Fetch appointments for the logged-in user
+        $appointments = Appointment::where('user_id', $userId)->get();
+
+        // Return view with the data
+        return view('user.userapp', ['appointments' => $appointments]);
+    }
+
+
+
 }

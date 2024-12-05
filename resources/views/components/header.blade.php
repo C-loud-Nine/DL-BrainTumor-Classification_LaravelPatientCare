@@ -88,9 +88,17 @@
             <!-- User-specific Links -->
              
             @if (session('user_type') == 'user')
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('usermri') }}">MRI Scan</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Reports
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{{ route('usermri') }}">MRI Scan</a></li>
+                <li><a class="dropdown-item" href="{{ route('usermri2') }}">Pre-trained Model</a></li>
+                <!-- Add more items here if necessary -->
+              </ul>
             </li>
+
             <li class="nav-item">
               <a class="nav-link" href="{{ route('appointmentpage') }}">Appointment</a>
             </li>
@@ -131,4 +139,9 @@
 
 </body>
 
+<!-- Correct placement of JavaScript files -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>
+
