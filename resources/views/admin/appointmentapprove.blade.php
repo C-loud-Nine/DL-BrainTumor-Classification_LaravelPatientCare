@@ -90,9 +90,10 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>Message</th>
                     <th>Doctor</th>
                     <th>Date</th>
-                    <th>Message</th>
+                    
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -104,14 +105,12 @@
                     <td>{{ $appointment->name }}</td>
                     <td>{{ $appointment->email }}</td>
                     <td>{{ $appointment->phone }}</td>
+                    <td>{{ $appointment->message }}</td>
                     <td>{{ $appointment->doctor }}</td>
                     <td>
                       <form action="{{ route('admin.appointmentapprove.update', $appointment->id) }}" method="POST">
                         @csrf
                         <input type="date" name="date" value="{{ $appointment->date }}" class="form-control">
-                    </td>
-                    <td>
-                      <textarea name="message" class="form-control" readonly>{{ $appointment->message }}</textarea>
                     </td>
                     <td>
                       <select name="status" class="form-control">
