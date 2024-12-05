@@ -256,7 +256,7 @@
   
   <div class="sidebar" id="sidebar">
   <ul class="sidebar-menu">
-    <li><a href="#" class="sidebar-link">Appointments</a></li>
+    <li><a href="{{ route('userapp') }}" class="sidebar-link">Appointments</a></li>
     <li><a href="{{ route('userreportlist') }}" class="sidebar-link">Reports</a></li>
     <li><a href="#" class="sidebar-link">XYZ</a></li>
   </ul>
