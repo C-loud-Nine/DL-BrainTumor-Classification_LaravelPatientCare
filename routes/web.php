@@ -8,7 +8,8 @@ use App\Http\Controllers\ForgetPasswordManager;
 use App\Http\Controllers\ImageUploadController;
 
 
-
+Route::get('/search-doctors', [HomeController::class, 'searchDoctors'])->name('searchDoctors');
+Route::get('/get-all-doctors', [HomeController::class, 'getAllDoctors'])->name('getAllDoctors');
 
 
 // Define routes for image upload and prediction
@@ -106,5 +107,7 @@ Route::post('/send-reset-link', [ForgetPasswordManager::class, 'sendResetLink'])
 
 //Appointment routes
 Route::post('/appointment', [HomeController::class, 'appointment'])->name('appointment');
+Route::get('/appointmentpage', [HomeController::class, 'appointmentpage'])->name('appointmentpage');
+
 
 

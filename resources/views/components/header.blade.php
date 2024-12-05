@@ -92,7 +92,7 @@
               <a class="nav-link" href="{{ route('usermri') }}">MRI Scan</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('appointment') }}">Appointment</a>
+              <a class="nav-link" href="{{ route('appointmentpage') }}">Appointment</a>
             </li>
 
               <li class="nav-item">
