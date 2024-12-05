@@ -391,9 +391,12 @@ public function rateDoctor(Request $request)
 
 
 
+            
+public function appointmentpage()
+{
+    return view('user.appointment');
+}
 
-
-   
 
 
       public function appointment(Request $request){
@@ -409,8 +412,32 @@ public function rateDoctor(Request $request)
                 $data->user_id = session('user_id');
             }
             $data->save();
-            return redirect()->back()->with('success', 'Appointment request sent successfully!');
+            return redirect()->back()->with('success', 'Your appointment has been submitted successfully. Please wait for your confirmation.!');
       }
+
+
+
+      public function searchDoctors(Request $request)
+{
+    $term = $request->input('term');
+
+    if (!$term) {
+        return response()->json([]);
+    }
+
+    // Fetch doctors matching the search term
+    $doctors = Doctor::where('name', 'LIKE', "%{$term}%")
+        ->orWhere('specialization', 'LIKE', "%{$term}%")
+        ->get(['name', 'specialization']);
+
+    return response()->json($doctors);
+}
+
+
+public function getAllDoctors() {
+    $doctors = Doctor::all(); // Assuming you have a Doctor model
+    return response()->json($doctors);
+}
 
 
 
