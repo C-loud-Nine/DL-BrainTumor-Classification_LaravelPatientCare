@@ -8,8 +8,27 @@ use App\Http\Controllers\ForgetPasswordManager;
 use App\Http\Controllers\ImageUploadController;
 
 
+
+
+// Show appointments for admin approval
+Route::get('/appointmentapprove', [AdminController::class, 'showAppointments'])->name('admin.appointmentapprove');
+
+// Update appointment status
+Route::post('/appointmentapprove/update/{id}', [AdminController::class, 'updateAppointment'])->name('admin.appointmentapprove.update');
+// Route to delete appointment
+Route::delete('/appointmentapprove/delete/{id}', [AdminController::class, 'deleteAppointment'])->name('admin.appointmentapprove.delete');
+
+
+
+
+
+
 Route::get('/search-doctors', [HomeController::class, 'searchDoctors'])->name('searchDoctors');
 Route::get('/get-all-doctors', [HomeController::class, 'getAllDoctors'])->name('getAllDoctors');
+
+
+Route::get('/userapp', [HomeController::class, 'userAppointments'])->name('userapp');
+
 
 
 // Define routes for image upload and prediction
@@ -21,6 +40,10 @@ Route::get('/doctormri', [ImageUploadController::class, 'doctormri'])->name('doc
 Route::post('/doctormri/doctorScanReport', [ImageUploadController::class, 'doctorScanReport'])->name('doctorScanReport');
 Route::get('/userreportlist', [ImageUploadController::class, 'userreportlist'])->name('userreportlist');
 Route::post('/userreportlist/delete', [ImageUploadController::class, 'deleteReport'])->name('deleteReport');
+
+Route::get('/usermri2', [ImageUploadController::class, 'usermri2'])->name('usermri2');
+Route::post('/usermri2/predict', [ImageUploadController::class, 'uploadAndPredict2'])->name('upload.predict2');
+
 
 
 
@@ -58,6 +81,7 @@ Route::get('/adminprofile/delete/{id}', [AdminController::class, 'deleteAdminPro
 Route::get('/adminspecial', [AdminController::class, 'adminspecial'])->name('admin.adminspecial'); // Show specialization management page
 Route::post('/specializations', [AdminController::class, 'storeSpecialization'])->name('admin.storeSpecialization'); // Add a new specialization
 Route::delete('/specializations/{id}', [AdminController::class, 'destroySpecialization'])->name('admin.destroySpecialization'); // Delete specialization
+Route::put('/specializations/{id}', [AdminController::class, 'updateSpecialization'])->name('admin.updateSpecialization');
 
 
 

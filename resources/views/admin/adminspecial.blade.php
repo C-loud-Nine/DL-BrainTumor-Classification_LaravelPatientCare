@@ -2,8 +2,35 @@
 <html lang="en">
   <head>
     @include('admin.css')
+    
     <style>
+      /* h1, h2 {
+        font-weight: bold;
+        color: white;
+      }
 
+      .table thead {
+        background-color: #34495e;
+      }
+
+      .table th, .table td {
+        color: white;
+        font-weight: bold;
+        padding: 12px;
+      }
+
+      .btn-action {
+        width: 90px;
+        padding: 5px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .btn-action:hover {
+        opacity: 0.8;
+      } */
+
+      
 h1, h2 {
   font-weight: bold; /* Make headings bold */
   color: white; /* Set heading color to white */
@@ -55,6 +82,20 @@ h1, h2 {
   border-color: #e74c3c; /* Change border color on hover */
 }
 
+
+      .modal-content {
+        background-color: #34495e;
+        color: white;
+        border: none;
+      }
+
+      .modal-header {
+        border-bottom: 1px solid #95a5a6;
+      }
+
+      .modal-footer {
+        border-top: 1px solid #95a5a6;
+      }
     </style>
   </head>
   <body>
@@ -90,7 +131,7 @@ h1, h2 {
                   <tr>
                       <th>#</th>
                       <th>Specialization</th>
-                      <th>Action</th>
+                      <th>Actions</th>
                   </tr>
               </thead>
               <tbody>
@@ -99,12 +140,24 @@ h1, h2 {
                           <td>{{ $loop->iteration }}</td>
                           <td>{{ $specialization->name }}</td>
                           <td>
-                              <form action="{{ route('admin.destroySpecialization', $specialization->id) }}" method="POST">
+                            <div class="table-actions">
+                              <!-- Update Button -->
+                                <button 
+                                  type="button" 
+                                  class="btn btn-success btn-sm btn-action"
+                                  onclick="openUpdateModal('{{ $specialization->id }}', '{{ $specialization->name }}')">
+                                  Update
+                                </button>
+
+                                <!-- Delete Form -->
+                                <form action="{{ route('admin.destroySpecialization', $specialization->id) }}" method="POST">
                                   @csrf
                                   @method('DELETE')
-                                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                              </form>
-                          </td>
+                                  <button type="submit" class="btn btn-danger btn-sm btn-action">Delete</button>
+                                </form>
+                              </div>
+                            </td>
+
                       </tr>
                   @empty
                       <tr>
@@ -117,6 +170,47 @@ h1, h2 {
       </div>
     </div>
 
+    <!-- Update Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateModalLabel">Update Specialization</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateForm" method="POST">
+              @csrf
+              @method('PUT')
+              <div class="mb-3">
+                <label for="specializationName" class="form-label">Specialization Name</label>
+                <input type="text" class="form-control" id="specializationName" name="name" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success" form="updateForm">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     @include('admin.script')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function openUpdateModal(id, currentName) {
+          // Set the current name in the modal input field
+          document.getElementById('specializationName').value = currentName;
+          // Set the action attribute for the form
+          document.getElementById('updateForm').action = `/specializations/${id}`;
+          // Show the modal
+          const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+          updateModal.show();
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
   </body>
 </html>

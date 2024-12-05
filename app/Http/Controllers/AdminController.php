@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Specialization;
+use App\Models\Appointment;
 
 class AdminController extends Controller
 {
@@ -188,5 +189,58 @@ class AdminController extends Controller
 
         return redirect()->route('admin.adminspecial')->with('success', 'Specialization deleted successfully.');
     }
+
+
+    public function updateSpecialization(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:specializations,name,' . $id,
+    ]);
+
+    $specialization = Specialization::findOrFail($id);
+    $specialization->name = $request->name;
+    $specialization->save();
+
+    return redirect()->route('admin.adminspecial')->with('success', 'Specialization updated successfully.');
+}
+
+
+
+
+
+// Show appointments for admin
+public function showAppointments()
+{
+    $appointments = Appointment::orderBy('status', 'asc')->get(); // Sort by status
+    return view('admin.appointmentapprove', compact('appointments'));
+}
+
+// Update appointment status
+public function updateAppointment(Request $request, $id)
+{
+    $appointment = Appointment::findOrFail($id);
+    
+    // Update the appointment
+    $appointment->date = $request->input('date');
+    $appointment->status = $request->input('status');
+    $appointment->save();
+
+    return redirect()->route('admin.appointmentapprove')->with('success', 'Appointment updated successfully.');
+}
+
+
+public function deleteAppointment($id)
+{
+    $appointment = Appointment::findOrFail($id);
+
+    try {
+        $appointment->delete();
+        return redirect()->route('admin.appointmentapprove')->with('success', 'Appointment deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('admin.appointmentapprove')->with('error', 'Failed to delete the appointment.');
+    }
+}
+
+
 
 }
