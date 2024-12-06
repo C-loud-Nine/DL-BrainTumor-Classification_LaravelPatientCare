@@ -211,7 +211,9 @@ class AdminController extends Controller
 // Show appointments for admin
 public function showAppointments()
 {
-    $appointments = Appointment::orderBy('status', 'asc')->get(); // Sort by status
+    $appointments = Appointment::orderBy('status', 'asc')
+    ->whereIn('status', ['pending', 'rejected' , 'approved'])              
+    ->get(); // Sort by status
     return view('admin.appointmentapprove', compact('appointments'));
 }
 
@@ -242,5 +244,46 @@ public function deleteAppointment($id)
 }
 
 
+public function showConfirmedAppointments()
+    {
+        // Fetch only confirmed appointments
+        $confirmedAppointments = Appointment::where('status', 'confirmed')->get();
 
+        return view('admin.appointmentconfirm', compact('confirmedAppointments'));
+    }
+
+    public function updateAppointmentStatus(Request $request, $id)
+{
+    $appointment = Appointment::find($id);
+
+    if ($appointment) {
+        // Update status to "pending"
+        $appointment->status = 'pending';
+        $appointment->save();
+
+        return redirect()->back()->with('success', 'Appointment updated successfully.');
+    }
+
+    return redirect()->back()->with('error', 'Appointment not found.');
 }
+
+
+    // Delete appointment
+    public function deleteConfirmedAppointment($id)
+    {
+        $appointment = Appointment::find($id);
+
+        if ($appointment) {
+            $appointment->delete();
+
+            return redirect()->back()->with('success', 'Appointment deleted successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Appointment not found.');
+    }
+}
+
+
+
+
+
