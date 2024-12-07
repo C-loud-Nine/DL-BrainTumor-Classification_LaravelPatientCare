@@ -24,8 +24,6 @@
   <!-- Back to top button -->
   <div class="back-to-top"></div>
 
-  <!-- Header Section -->
-  <header>
     <div class="topbar">
       <div class="container">
         <div class="row">
@@ -121,7 +119,7 @@
               </li>
             @else
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('usermri') }}">MRI Scan</a>
+              <a class="nav-link" href="{{ route('usermri') }}">Reports</a>
             </li>
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('login') }}">Login</a>
@@ -135,13 +133,5 @@
         </div> <!-- .navbar-collapse -->
       </div> <!-- .container -->
     </nav>
-  </header>
 
-</body>
-
-<!-- Correct placement of JavaScript files -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-</html>
 

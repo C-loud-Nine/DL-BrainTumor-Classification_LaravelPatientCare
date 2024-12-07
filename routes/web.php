@@ -10,6 +10,18 @@ use App\Http\Controllers\ImageUploadController;
 
 
 
+Route::get('/appointmentconfirm', [AdminController::class, 'showConfirmedAppointments'])->name('admin.appointmentconfirm');
+
+Route::post('/appointmentconfirm/update/{id}', [AdminController::class, 'updateAppointmentStatus'])->name('admin.appointmentconfirm.update');
+
+
+// Delete appointment
+Route::delete('/appointmentconfirm/delete/{id}', [AdminController::class, 'deleteConfirmedAppointment'])->name('admin.appointmentconfirm.delete');
+
+
+
+
+
 // Show appointments for admin approval
 Route::get('/appointmentapprove', [AdminController::class, 'showAppointments'])->name('admin.appointmentapprove');
 
@@ -27,7 +39,16 @@ Route::get('/search-doctors', [HomeController::class, 'searchDoctors'])->name('s
 Route::get('/get-all-doctors', [HomeController::class, 'getAllDoctors'])->name('getAllDoctors');
 
 
+// Route for user appointments page (GET)
 Route::get('/userapp', [HomeController::class, 'userAppointments'])->name('userapp');
+
+// Route for confirming an appointment (POST)
+Route::post('/userapp/confirm/{id}', [HomeController::class, 'confirmAppointment'])->name('user.confirm');
+
+// Route for rejecting an appointment (POST)
+Route::post('/userapp/reject/{id}', [HomeController::class, 'rejectAppointment'])->name('user.reject');
+
+
 
 
 

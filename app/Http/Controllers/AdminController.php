@@ -6,14 +6,36 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Specialization;
 use App\Models\Appointment;
+use App\Models\Report;
 
 class AdminController extends Controller
 {
     // Admin home page
+    // public function adminHome()
+    // {
+    //     return view('admin.adminhome');
+    // }
+
+
     public function adminHome()
-    {
-        return view('admin.adminhome');
-    }
+{
+    // Fetch reports grouped by the 'report_class' field
+    $reportCounts = Report::select('report_class', Report::raw('count(*) as total'))
+        ->groupBy('report_class')
+        ->get();
+
+    // Fetch user counts by roles (assuming you have 'admin' and 'doctor' roles)
+    $adminCount = User::where('type', 'admin')->count();
+    $doctorCount = User::where('type', 'doctor')->count();
+    $userCount = User::where('type', 'user')->count();
+    $totCount = User::count(); // Total users (admins + doctors + other roles)
+
+    // Pass data to the view
+    return view('admin.adminhome', compact('reportCounts', 'adminCount', 'doctorCount', 'userCount' , 'totCount'));
+}
+
+
+
 
     // User list page
     public function userlist()
@@ -211,7 +233,9 @@ class AdminController extends Controller
 // Show appointments for admin
 public function showAppointments()
 {
-    $appointments = Appointment::orderBy('status', 'asc')->get(); // Sort by status
+    $appointments = Appointment::orderBy('status', 'asc')
+    ->whereIn('status', ['pending', 'rejected' , 'approved'])              
+    ->get(); // Sort by status
     return view('admin.appointmentapprove', compact('appointments'));
 }
 
@@ -242,5 +266,46 @@ public function deleteAppointment($id)
 }
 
 
+public function showConfirmedAppointments()
+    {
+        // Fetch only confirmed appointments
+        $confirmedAppointments = Appointment::where('status', 'confirmed')->get();
 
+        return view('admin.appointmentconfirm', compact('confirmedAppointments'));
+    }
+
+    public function updateAppointmentStatus(Request $request, $id)
+{
+    $appointment = Appointment::find($id);
+
+    if ($appointment) {
+        // Update status to "pending"
+        $appointment->status = 'pending';
+        $appointment->save();
+
+        return redirect()->back()->with('success', 'Appointment updated successfully.');
+    }
+
+    return redirect()->back()->with('error', 'Appointment not found.');
 }
+
+
+    // Delete appointment
+    public function deleteConfirmedAppointment($id)
+    {
+        $appointment = Appointment::find($id);
+
+        if ($appointment) {
+            $appointment->delete();
+
+            return redirect()->back()->with('success', 'Appointment deleted successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Appointment not found.');
+    }
+}
+
+
+
+
+
