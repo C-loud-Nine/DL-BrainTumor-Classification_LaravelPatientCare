@@ -6,14 +6,36 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Specialization;
 use App\Models\Appointment;
+use App\Models\Report;
 
 class AdminController extends Controller
 {
     // Admin home page
+    // public function adminHome()
+    // {
+    //     return view('admin.adminhome');
+    // }
+
+
     public function adminHome()
-    {
-        return view('admin.adminhome');
-    }
+{
+    // Fetch reports grouped by the 'report_class' field
+    $reportCounts = Report::select('report_class', Report::raw('count(*) as total'))
+        ->groupBy('report_class')
+        ->get();
+
+    // Fetch user counts by roles (assuming you have 'admin' and 'doctor' roles)
+    $adminCount = User::where('type', 'admin')->count();
+    $doctorCount = User::where('type', 'doctor')->count();
+    $userCount = User::where('type', 'user')->count();
+    $totCount = User::count(); // Total users (admins + doctors + other roles)
+
+    // Pass data to the view
+    return view('admin.adminhome', compact('reportCounts', 'adminCount', 'doctorCount', 'userCount' , 'totCount'));
+}
+
+
+
 
     // User list page
     public function userlist()

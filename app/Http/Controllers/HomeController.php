@@ -28,6 +28,8 @@ class HomeController extends Controller
         return view('user.home', compact('doctors', 'doctor'));
     }
 
+
+  
     
     
     public function login()
