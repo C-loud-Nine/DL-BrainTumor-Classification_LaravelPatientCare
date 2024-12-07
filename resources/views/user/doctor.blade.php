@@ -1,3 +1,81 @@
+<div class="page-section">
+  <div class="container">
+    <h1 class="text-center mb-5 wow fadeInUp">Our Doctors</h1>
+
+    <!-- Doctor Slideshow -->
+    <div class="owl-carousel wow fadeInUp" id="doctorSlideshow">
+      @foreach ($doctors as $doctor)
+      <div class="item">
+        <div class="card-doctor">
+          <!-- Doctor Image Section -->
+          <div class="header">
+            <img 
+              src="{{ $doctor->picture ? asset('uploads/profile/' . $doctor->picture) : asset('default-profile.png') }}" 
+              alt="Doctor Image"
+              class="doctor-img"
+            >
+            <div class="meta">
+              <a href="tel:{{ $doctor->doctor->phone ?? '#' }}">
+                <span class="mai-call"></span>
+              </a>
+              <a href="https://wa.me/{{ $doctor->doctor->phone ?? '#' }}">
+                <span class="mai-logo-whatsapp"></span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Doctor Info Section -->
+          <div class="body">
+            <p class="text-xl mb-0">{{ $doctor->doctor->name ?? 'N/A' }}</p>
+            <span class="text-sm text-grey">{{ $doctor->doctor->specialization ?? 'N/A' }}</span>
+
+            <!-- Doctor Rating -->
+            <div class="rating">
+              <span class="stars">
+                {{ str_repeat('★', floor($doctor->doctor->rating ?? 0)) }}
+                {{ str_repeat('☆', 5 - floor($doctor->doctor->rating ?? 0)) }}
+              </span>
+              <span class="rating-value">
+                ({{ $doctor->doctor->rating ?? 'N/A' }})
+              </span>
+            </div>
+
+            <a href="profile.html" class="btn-readmore">Read More</a>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div> <!-- .owl-carousel -->
+  </div> <!-- .container -->
+</div> <!-- .page-section -->
+
+
+
+<!-- Include Owl Carousel CSS -->
+<link rel="stylesheet" href="path-to-owl-carousel.css"> <!-- Include Owl Carousel CSS -->
+
+<!-- Include Owl Carousel JavaScript -->
+<script src="path-to-jquery.js"></script> <!-- Include jQuery if not already -->
+<script src="path-to-owl-carousel.js"></script> <!-- Include Owl Carousel JS -->
+<script>
+  // Initialize Owl Carousel
+  $(document).ready(function(){
+    $('#doctorSlideshow').owlCarousel({
+      items: 3, // Show 3 cards at a time
+      loop: true,
+      margin: 15,
+      autoplay: true,
+      autoplayTimeout: 5000,
+      autoplayHoverPause: true,
+      responsive: {
+        0: { items: 1 }, // 1 item on small screens
+        768: { items: 2 }, // 2 items on medium screens
+        1200: { items: 3 } // 3 items on large screens
+      }
+    });
+  });
+</script>
+
 
 <style>
     /* Styling for the doctor cards */
@@ -103,58 +181,3 @@
       justify-content: center;
     }
   </style>
-</head>
-<body>
-
-<!-- Doctor Slideshow -->
-<div class="owl-carousel wow fadeInUp" id="doctorSlideshow">
-  @foreach ($doctors as $doctor)
-  <div class="item">
-    <div class="card-doctor">
-      <div class="header">
-        <img src="{{ $doctor->picture ? asset('uploads/profile/' . $doctor->picture) : asset('default-profile.png') }}" alt="Doctor Image">
-        <div class="meta">
-          <a href="tel:{{ $doctor->doctor->phone ?? '#' }}"><span class="mai-call"></span></a>
-          <a href="https://wa.me/{{ $doctor->doctor->phone ?? '#' }}"><span class="mai-logo-whatsapp"></span></a>
-        </div>
-      </div>
-      <div class="body">
-        <p class="text-xl mb-0">{{ $doctor->doctor->name ?? 'N/A' }}</p>
-        <span class="text-sm text-grey">{{ $doctor->doctor->specialization ?? 'N/A' }}</span>
-        <div class="rating">
-          <span class="stars">
-            {{ str_repeat('★', floor($doctor->doctor->rating ?? 0)) }}
-            {{ str_repeat('☆', 5 - floor($doctor->doctor->rating ?? 0)) }}
-          </span>
-          <span class="rating-value">({{ $doctor->doctor->rating ?? 'N/A' }})</span>
-        </div>
-        <a href="profile.html" class="btn-readmore">Read More</a>
-      </div>
-    </div>
-  </div>
-  @endforeach
-</div>
-
-<!-- Include Owl Carousel JavaScript -->
-<script src="path-to-jquery.js"></script> <!-- Include jQuery if not already -->
-<script src="path-to-owl-carousel.js"></script> <!-- Include Owl Carousel JS -->
-<script>
-  // Initialize Owl Carousel
-  $(document).ready(function(){
-    $('#doctorSlideshow').owlCarousel({
-      items: 3, // Show 3 cards at a time
-      loop: true,
-      margin: 15,
-      autoplay: true,
-      autoplayTimeout: 5000,
-      autoplayHoverPause: true,
-      responsive: {
-        0: { items: 1 }, // 1 item on small screens
-        768: { items: 2 }, // 2 items on medium screens
-        1200: { items: 3 } // 3 items on large screens
-      }
-    });
-  });
-</script>
-</body>
-</html>

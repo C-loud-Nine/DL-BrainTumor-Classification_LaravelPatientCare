@@ -19,6 +19,10 @@ class ImageUploadController extends Controller
     
         public function usermri()
         {
+            // Check if session contains the user ID and ensure user ID matches the session
+            if (!session()->has('user_id')) {
+                return redirect()->route('login')->with('error', 'Unauthorized access. Please log in.');
+            }
             // Show the upload form without results initially
             return view('user.usermri', ['result' => null, 'imageUrl' => null]);
         }

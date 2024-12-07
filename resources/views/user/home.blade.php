@@ -74,9 +74,7 @@
     </div> <!-- .bg-light -->
   </div> <!-- .bg-light -->
 
-  <div class="page-section">
-    <div class="container">
-      <h1 class="text-center mb-5 wow fadeInUp">Our Doctors</h1>
+
 
       
       
@@ -89,11 +87,13 @@
 
   
   
-      @include('user.appointment')
-
+    
+  
  
 
 
 <x-footer />
+
+
+
 @include('admin.script')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

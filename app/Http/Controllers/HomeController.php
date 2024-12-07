@@ -28,6 +28,8 @@ class HomeController extends Controller
         return view('user.home', compact('doctors', 'doctor'));
     }
 
+
+  
     
     
     public function login()
@@ -441,18 +443,63 @@ public function getAllDoctors() {
 
 
 
-
 public function userAppointments(Request $request)
-    {
-        // Retrieve user_id from session
-        $userId = $request->session()->get('user_id');
+{
+    // Retrieve user_id from session
+    $userId = $request->session()->get('user_id');
 
-        // Fetch appointments for the logged-in user
-        $appointments = Appointment::where('user_id', $userId)->get();
+    // Fetch pending and rejected appointments
+    $pendingRejected = Appointment::where('user_id', $userId)
+        ->whereIn('status', ['pending', 'rejected'])
+        ->get();
 
-        // Return view with the data
-        return view('user.userapp', ['appointments' => $appointments]);
-    }
+    // Fetch approved appointments
+    $approved = Appointment::where('user_id', $userId)
+        ->where('status', 'approved')
+        ->get();
+
+    $confirmed = Appointment::where('user_id', $userId)
+        ->where('status', 'confirmed')
+        ->get();
+
+    // Return view with the data
+    return view('user.userapp', compact('pendingRejected', 'approved', 'confirmed'));
+}
+
+public function confirmAppointment(Request $request, $id)
+{
+
+        $appointment = Appointment::find($id);
+        $appointment->status = 'confirmed';
+        $appointment->save();
+
+        return redirect()->route('userapp')->with('success', 'Appointment confirmed successfully!');
+ 
+
+
+return redirect()->route('userapp')->with('error', 'Appointment not found or access denied.');
+
+}
+
+
+
+
+public function rejectAppointment(Request $request, $id)
+{
+ 
+        $appointment = Appointment::findOrFail($id);
+
+   
+        $appointment->delete();
+
+        return redirect()->route('userapp')->with('success', 'Appointment rejected successfully!');
+  
+
+  
+
+    return redirect()->route('userapp')->with('error', 'Appointment not found or access denied.');
+}
+
 
 
 
