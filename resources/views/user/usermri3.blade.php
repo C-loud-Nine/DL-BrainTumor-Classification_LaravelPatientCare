@@ -8,7 +8,7 @@
 <body>
     <div class="container11">
         <div class="text-center mb-5">
-            <h1 class="text-primary fw-bold">MRI Prediction</h1>
+            <h1 class="text-primary fw-bold">MRI Prediction 3</h1>
             <p class="text-muted">Upload an MRI image for accurate medical analysis.</p>
         </div>
 
@@ -19,10 +19,9 @@
             </div>
         @endif
 
-
         <!-- Upload Form -->
         <div class="card p-5 shadow-lg mb-4">
-            <form action="{{ route('upload.predict') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('upload.predict3') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
                     <label for="image" class="form-label fw-bold">Upload MRI Image</label>
@@ -34,17 +33,30 @@
             </form>
         </div>
 
-        <!-- Prediction Result Section -->
-        @if(session('result') && session('imageUrl'))
-        <div class="result-section text-center mt-5 mb-5">
-            <h2 class="text-success fw-bold">Prediction Result</h2>
-            <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
-            <div class="result-text mt-4">
-                <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span></p>
-                <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> <span class="text-warning fs-4">{{ number_format(session('result')['confidence'] * 100, 2) }}%</span></p>
-            </div>
+        <!-- Prediction Results Section -->
+        <div class="results-container d-flex justify-content-center mt-5">
+            @if(session('result1') && session('imageUrl'))
+                <div class="result-section me-3">
+                    <h2 class="text-success fw-bold">Prediction Result 1</h2>
+                    <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
+                    <div class="result-text mt-4">
+                        <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> <span class="text-primary fs-4">{{ session('result1')['prediction'] }}</span></p>
+                        <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> <span class="text-warning fs-4">{{ number_format(session('result1')['confidence'] * 100, 2) }}%</span></p>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('result2') && session('imageUrl'))
+                <div class="result-section ms-3">
+                    <h2 class="text-success fw-bold">Prediction Result 2</h2>
+                    <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
+                    <div class="result-text mt-4">
+                        <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> <span class="text-primary fs-4">{{ session('result2')['prediction'] }}</span></p>
+                        <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> <span class="text-warning fs-4">{{ number_format(session('result2')['confidence'] * 100, 2) }}%</span></p>
+                    </div>
+                </div>
+            @endif
         </div>
-        @endif
 
         <!-- Errors Section -->
         @if($errors->any())
@@ -57,14 +69,6 @@
     </div>
 
     <x-footer />
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-
-
-@include('admin.script')
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -84,6 +88,12 @@
             padding: 50px;
         }
 
+        /* Results Container */
+        .results-container {
+            display: flex;
+            gap: 20px;
+        }
+
         /* Card Styling */
         .card {
             border: none;
@@ -94,19 +104,19 @@
 
         /* Result Section */
         .result-section {
-            margin-top: 40px;
-            margin-bottom: 40px;
+            flex: 1;
             padding: 25px;
             background: #ffffff;
             border: 1px solid #e0e0e0;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         /* Image Preview Styling */
         .image-preview {
-            max-width: 350px;
-            max-height: 350px;
+            max-width: 200px;
+            max-height: 200px;
             object-fit: cover;
             border: 2px solid #dee2e6;
             border-radius: 10px;
@@ -136,7 +146,7 @@
 
         /* Result Text Styling */
         .result-text p {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             margin: 10px 0;
         }
 
@@ -161,18 +171,18 @@
 
         /* Custom Error Message Styling */
         .custom-error-message {
-            background-color: #f8d7da; /* Light red background */
-            border: 1px solid #f5c6cb;  /* Soft red border */
-            border-radius: 10px;  /* Rounded corners */
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  /* Soft shadow for depth */
-            margin-bottom: 20px; /* Space at the bottom */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .error-text {
             font-size: 1.2rem;
             font-weight: 600;
-            color: black; /* Darker red text for better visibility */
+            color: black;
             margin-bottom: 10px;
         }
 
@@ -185,10 +195,9 @@
         }
 
         .btn-link:hover {
-            color: #0056b3; /* Darker shade of blue for hover effect */
+            color: #0056b3;
             text-decoration: underline;
         }
-
 
         /* Footer Margin */
         x-footer {

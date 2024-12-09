@@ -65,6 +65,9 @@ Route::post('/userreportlist/delete', [ImageUploadController::class, 'deleteRepo
 Route::get('/usermri2', [ImageUploadController::class, 'usermri2'])->name('usermri2');
 Route::post('/usermri2/predict', [ImageUploadController::class, 'uploadAndPredict2'])->name('upload.predict2');
 
+Route::get('/usermri3', [ImageUploadController::class, 'usermri3'])->name('usermri3');
+Route::post('/usermri3/predict', [ImageUploadController::class, 'uploadAndPredict3'])->name('upload.predict3');
+
 
 
 
