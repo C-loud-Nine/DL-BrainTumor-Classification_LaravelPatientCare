@@ -368,5 +368,103 @@ class ImageUploadController extends Controller
         }
 
 
+        public function usermri3()
+        {
+            // Show the upload form without results initially
+            return view('user.usermri3', ['result' => null, 'imageUrl' => null]);
+        }
+        
+
+
+        public function uploadAndPredict3(Request $request)
+        {
+            // Check if the session is set (user is logged in)
+            if (!session()->has('user_id')) {
+                return redirect()->route('login')->with('error', 'Please log in to upload an MRI image.');
+            }
+        
+            // Validate the uploaded image
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            ], [
+                'image.required' => 'Please upload an image.',
+                'image.image' => 'The file must be a valid image.',
+                'image.mimes' => 'Only JPEG, PNG, and JPG formats are supported.',
+                'image.max' => 'Image size must not exceed 2MB.',
+            ]);
+        
+            // Handle file upload
+            if ($request->hasFile('image')) {
+                $image = $request->file('image'); // Retrieve the uploaded file
+                $uploadPath = public_path('uploads/mri/'); // Define the destination path
+        
+                // Ensure the folder exists (create it if it doesn't)
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0755, true); // Create the directory if it doesn't exist
+                }
+        
+                // Use the original filename for the uploaded image
+                $imageName = $image->getClientOriginalName();
+        
+                // If a file with the same name already exists, add a timestamp to the filename
+                if (file_exists($uploadPath . $imageName)) {
+                    $timestamp = time();
+                    $imageName = $timestamp . '_' . $image->getClientOriginalName();
+                }
+        
+                // Move the uploaded file to the destination folder
+                $image->move($uploadPath, $imageName);
+            }
+        
+            try {
+                // Prepare the image for FastAPI prediction
+                $imageData = fopen($uploadPath . $imageName, 'r');
+                $response1 = Http::attach('file', $imageData, $imageName)
+                    ->post(env('FASTAPI_URL') . '/predict');
+                $response2 = Http::attach('file', $imageData, $imageName)
+                    ->post(env('FASTAPI_URL_2') . '/predict');
+        
+                if ($response1->successful()) {
+                    $result1 = $response1->json();
+                    $result2 = $response2->json();
+        
+                    // // Get session data
+                    // $scannerName = session('user_name');
+                    // $scannerId = session('user_id');
+                    // $userName = session('user_name');
+                    // $userId = session('user_id');
+                    // $userType = session('user_type');
+                    // $reportClass = $result['prediction'];
+                    // $confidence = $result['confidence'];
+        
+                    // // Store the report in the database
+                    // Report::create([
+                    //     'scanner_name' => $scannerName,
+                    //     'scanner_id' => $scannerId,
+                    //     'user_name' => $userName,
+                    //     'user_id' => $userId,
+                    //     'type' => $userType,
+                    //     'report_class' => $reportClass,
+                    //     'confidence' => $confidence,
+                    //     'report_image' => $imageName, // Save only the image name
+                    // ]);
+        
+                    // Redirect with results
+                    return redirect()->route('usermri3')->with([
+                        'result1' => $result1,
+                        'result2' => $result2,
+                        'imageUrl' => asset('uploads/mri/' . $imageName), // Generate the full URL for the frontend
+                    ]);
+                }
+        
+                // Handle failed predictions
+                return back()->withErrors(['message' => 'Prediction failed. Please try again.']);
+            } catch (\Exception $e) {
+                \Log::error('FastAPI Connection Error: ' . $e->getMessage());
+                return back()->withErrors(['message' => 'Error connecting to FastAPI: ' . $e->getMessage()]);
+            }
+        }
+
+
 
 }

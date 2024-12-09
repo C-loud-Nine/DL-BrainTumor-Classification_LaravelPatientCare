@@ -93,6 +93,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="{{ route('usermri') }}">MRI Scan</a></li>
                 <li><a class="dropdown-item" href="{{ route('usermri2') }}">Pre-trained Model</a></li>
+                <li><a class="dropdown-item" href="{{ route('usermri3') }}">Combained Scan</a></li>
                 <!-- Add more items here if necessary -->
               </ul>
             </li>
