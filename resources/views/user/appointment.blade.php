@@ -137,6 +137,7 @@
     });
 </script>
 
+@include('admin.script')
 
 
 
