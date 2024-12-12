@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Specialization;
 use App\Models\Appointment;
 use App\Models\Report;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -303,6 +305,58 @@ public function showConfirmedAppointments()
 
         return redirect()->back()->with('error', 'Appointment not found.');
     }
+
+
+
+
+    public function adminDocApp()
+    {
+        // Retrieve the unique doctor names from the appointments table
+        $doctors = Appointment::select('doctor')->distinct()->pluck('doctor');
+
+        return view('admin.admindoctorapp', compact('doctors'));
+    }
+
+
+
+    // public function fetchDoctorAppointments(Request $request)
+    // {
+    //     // Fetch all confirmed appointments for the selected doctor
+    //     $appointments = Appointment::where('doctor', $request->doctor)
+    //         ->where('status', 'confirmed')
+    //         ->orderBy('date', 'asc')
+    //         ->get();
+
+    //     return response()->json($appointments);
+    // }
+
+    public function fetchDoctorAppointments(Request $request)
+{
+    $doctorName = $request->input('doctor');
+    $appointments = Appointment::where('doctor', $doctorName)
+        ->where('status', 'confirmed')
+        ->orderBy('date', 'asc')
+        ->get()
+        ->groupBy('date');
+
+    return response()->json($appointments);
+}
+
+
+public function viewNoShowAppointments()
+{
+    // Fetch appointments with status 'approved' and updated_at older than 24 hours
+    $appointments = DB::table('appointments')
+        ->where('status', 'approved')
+        ->where('updated_at', '<', Carbon::now()->subHours(24))
+        ->get();
+
+    return view('admin.adminnoshow', compact('appointments'));
+}
+
+
+
+
 }
 
 
