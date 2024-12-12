@@ -163,5 +163,6 @@ Route::post('/send-reset-link', [ForgetPasswordManager::class, 'sendResetLink'])
 Route::post('/appointment', [HomeController::class, 'appointment'])->name('appointment');
 Route::get('/appointmentpage', [HomeController::class, 'appointmentpage'])->name('appointmentpage');
 
+Route::get('/doctorapplist', [HomeController::class, 'showAppointments'])->name('doctorapplist');
 
 
