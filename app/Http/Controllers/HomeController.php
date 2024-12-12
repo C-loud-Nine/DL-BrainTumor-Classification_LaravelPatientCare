@@ -7,6 +7,9 @@ use App\Models\Doctor;
 use App\Models\Appointment;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class HomeController extends Controller
 {
@@ -498,6 +501,27 @@ public function rejectAppointment(Request $request, $id)
   
 
     return redirect()->route('userapp')->with('error', 'Appointment not found or access denied.');
+}
+
+
+public function showAppointments()
+{
+    // Retrieve the doctor's name from the session
+    $doctorName = session('user_name');
+
+    if (!$doctorName) {
+        return redirect()->route('login')->with('error', 'Doctor not found');
+    }
+
+    // Get appointments for the doctor based on the name stored in the session
+    $appointments = Appointment::where('doctor', $doctorName)  // Use the 'doctor' column directly
+        ->orderBy('date', 'asc')  // Order by appointment date
+        ->get()
+        ->groupBy(function ($appointment) {
+            return Carbon::parse($appointment->date)->format('Y-m-d');
+        });
+
+    return view('user.doctorapplist', compact('doctorName', 'appointments'));
 }
 
 
