@@ -95,11 +95,17 @@ Route::get('/demote/{id}', [AdminController::class, 'demotion'])->name('admin.de
 Route::get('/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 Route::get('/adminlist', [AdminController::class, 'adminlist'])->name('admin.adminlist');
 Route::get('/doctorlist', [AdminController::class, 'doctorlist'])->name('admin.doctorlist');
-
 Route::get('/adminprofile', [AdminController::class, 'adminprofile'])->name('admin.adminprofile');
 Route::post('/adminprofile/update/{id}', [AdminController::class, 'updateAdminProfile'])->name('admin.update');
 Route::get('/adminprofile/delete/{id}', [AdminController::class, 'deleteAdminProfile'])->name('admin.delete');
 
+
+
+Route::get('/admindoctorapp', [AdminController::class, 'adminDocApp'])->name('admin.admindoctorapp');
+
+Route::post('/fetch-appointments', [AdminController::class, 'fetchDoctorAppointments'])->name('fetch.doctor.appointments');
+
+Route::get('/adminnoshow', [AdminController::class, 'viewNoShowAppointments'])->name('admin.adminnoshow');
 
 // Specialization management routes using AdminController
 Route::get('/adminspecial', [AdminController::class, 'adminspecial'])->name('admin.adminspecial'); // Show specialization management page
