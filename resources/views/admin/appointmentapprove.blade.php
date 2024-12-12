@@ -23,8 +23,13 @@
         background-color: #f1f5f9;
       }
 
+      .table th, .table td {
+        color: #4b5563;
+        text-align: center;
+        vertical-align: middle;
+      }
+
       .table th {
-        color: #374151;
         font-weight: bold;
       }
 
@@ -33,6 +38,13 @@
         border: 1px solid #d1d5db;
         font-size: 0.9rem;
         padding: 5px;
+        color: #4b5563;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
       }
 
       .btn-sm {
@@ -55,6 +67,52 @@
       .btn-danger:hover {
         background-color: #c82333;
         border-color: #bd2130;
+      }
+
+      .btn-success {
+        background-color: #38a169;
+        border-color: #38a169;
+      }
+
+      .btn-success:hover {
+        background-color: #2f855a;
+        border-color: #276749;
+      }
+
+      /* Style for select dropdown */
+      select.form-control {
+        background-color: #ffffff;
+        color: #374151;
+        font-size: 1rem;
+        padding: 5px;
+        border-radius: 5px;
+      }
+
+      select.form-control option {
+        background-color: #ffffff;
+        color: #4b5563;
+        font-weight: bold;
+        padding: 5px;
+      }
+
+      select.form-control option:hover {
+        background-color: #3b82f6;
+        color: #ffffff;
+      }
+
+      /* Responsive Table */
+      @media (max-width: 768px) {
+        .table th, .table td {
+          font-size: 0.9rem;
+        }
+
+        .btn-sm {
+          font-size: 0.7rem;
+        }
+
+        .card-title {
+          font-size: 1.2rem;
+        }
       }
     </style>
   </head>
@@ -83,7 +141,7 @@
                 </div>
               @endif
 
-              <table class="table table-hover">
+              <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -93,7 +151,6 @@
                     <th>Message</th>
                     <th>Doctor</th>
                     <th>Date</th>
-                    
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
