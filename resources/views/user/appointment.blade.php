@@ -1,6 +1,5 @@
 <x-header />
 
-
 <div class="page-section">
     <div class="container">
         <h1 class="text-center wow fadeInUp">Make an Appointment</h1>
@@ -26,7 +25,7 @@
                 <div class="col-12 col-sm-6 py-2 wow fadeInLeft position-relative" data-wow-delay="300ms">
                     <input type="date" name="date" class="form-control" id="dateInput" required>
                     <div id="dateMessage" class="position-absolute text-muted mt-1" style="display: none;">
-                        Please note: The selected date is not guaranteed. We will confirm a date within 7 days (+/-) of your selection.
+                        Please note: You can choose any date in the coming 3 months. We may adjust the appointment date by up to 7 days.
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 py-2 wow fadeInRight" data-wow-delay="300ms">
@@ -60,12 +59,35 @@
         let doctorsList = []; // To store all fetched doctors
 
         // Fetch all doctors when the page loads
-        fetch('/get-all-doctors') // Update this endpoint to fetch all doctors
+        fetch('/get-all-doctors')
             .then(response => response.json())
             .then(data => {
                 doctorsList = data; // Store all doctors in memory
             })
             .catch(error => console.error('Error fetching doctors:', error));
+
+        // Date picker logic for limiting selection to the next 3 months
+        const today = new Date();
+        const maxDate = new Date();
+        maxDate.setMonth(today.getMonth() + 3);
+
+        dateInput.setAttribute('min', today.toISOString().split('T')[0]);
+        dateInput.setAttribute('max', maxDate.toISOString().split('T')[0]);
+
+        // Show date selection message
+        dateInput.addEventListener('focus', function () {
+            dateMessage.style.display = 'block';
+        });
+
+        // Hide the message if the user interacts outside of the date input
+        document.addEventListener('click', function (event) {
+            if (!dateInput.contains(event.target)) {
+                dateMessage.style.display = 'none';
+            }
+        });
+
+        // Reset the form every time the page loads (after refresh or after success message)
+        form.reset();
 
         // Show all doctors when the input field is clicked
         doctorSearchInput.addEventListener('focus', function () {
@@ -117,59 +139,40 @@
                 doctorDropdown.style.display = 'none';
             }
         });
-
-        // Show date selection message
-        dateInput.addEventListener('focus', function () {
-            dateMessage.style.display = 'block';
-        });
-
-        // Hide the message if the user interacts outside of the date input
-        document.addEventListener('click', function (event) {
-            if (!dateInput.contains(event.target)) {
-                dateMessage.style.display = 'none';
-            }
-        });
-
-        // Reset the form on page load (after refresh)
-        if ("{{ session('success') }}") {
-            form.reset(); // Reset the form after success message
-        }
     });
 </script>
 
 @include('admin.script')
 
-
-
-
 <style>
-#dateMessage {
-    font-size: 0.9em;
-    color: #6c757d;
-    font-style: italic;
-    background: #f8f9fa;
-    padding: 0.5rem;
-    border-radius: 4px;
-    z-index: 10;
-    max-width: 300px; /* Ensures text wrapping */
-}
+    #dateMessage {
+        font-size: 0.9em;
+        color: #6c757d;
+        font-style: italic;
+        background: #f8f9fa;
+        padding: 0.5rem;
+        border-radius: 4px;
+        z-index: 10;
+        max-width: 300px;
+    }
 
-form .position-relative {
-    position: relative;
-}
+    form .position-relative {
+        position: relative;
+    }
 
-.alert-success {
+    .alert-success {
         background-color: #d4edda;
         color: #155724;
         border-color: #c3e6cb;
     }
+
     .alert-dismissible .close {
         color: #155724;
     }
 
-@media (max-width: 576px) {
-    #dateMessage {
-        max-width: 100%; /* Adjust for small screens */
+    @media (max-width: 576px) {
+        #dateMessage {
+            max-width: 100%;
+        }
     }
-}
 </style>
