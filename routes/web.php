@@ -166,3 +166,4 @@ Route::get('/appointmentpage', [HomeController::class, 'appointmentpage'])->name
 Route::get('/doctorapplist', [HomeController::class, 'showAppointments'])->name('doctorapplist');
 
 
+Route::get('/docreport', [HomeController::class, 'showReports'])->name('docreport');

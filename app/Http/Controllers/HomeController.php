@@ -9,6 +9,7 @@ use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Report;
 
 
 class HomeController extends Controller
@@ -524,6 +525,22 @@ public function showAppointments()
     return view('user.doctorapplist', compact('doctorName', 'appointments'));
 }
 
+
+
+public function showReports()
+{
+    // Retrieve the doctor's name (username) from the session
+    $doctorName = session('user_name');  // Assuming the doctor's name is stored in session
+
+    // Fetch all reports and order them by the creation timestamp (latest first)
+    $reports = Report::orderBy('created_at', 'desc')->get();
+
+    // Get unique scanner names for filtering purposes
+    $uniqueScannerNames = Report::distinct('scanner_name')->pluck('scanner_name');
+
+    // Return the view with the necessary data
+    return view('user.docreport', compact('reports', 'uniqueScannerNames', 'doctorName'));
+}
 
 
 
