@@ -48,10 +48,7 @@
 
 <style>
     /* Styling for the container and the appointment table */
-    .container {
-        max-width: 960px;
-        margin-top: 40px;
-    }
+  
 
     .card {
         border-radius: 8px;
