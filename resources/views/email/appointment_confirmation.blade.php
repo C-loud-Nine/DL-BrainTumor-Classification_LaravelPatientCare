@@ -6,8 +6,8 @@
     <title>Appointment Confirmation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
             margin: 0;
             padding: 0;
             line-height: 1.6;
@@ -16,54 +16,90 @@
 
         .container {
             max-width: 600px;
-            margin: 50px auto;
+            margin: 40px auto;
             background: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             padding: 20px;
             border: 1px solid #ddd;
         }
 
-        h1 {
-            color: #4CAF50;
-            font-size: 1.8em;
+        .header {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 15px 20px;
             text-align: center;
-            margin-bottom: 20px;
+            border-radius: 8px 8px 0 0;
         }
 
-        p {
+        .header h1 {
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .content p {
             margin: 10px 0;
             font-size: 1rem;
         }
 
-        strong {
+        .content p strong {
             color: #333;
-        }
-
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #777;
-            font-size: 0.9rem;
         }
 
         .highlight {
             color: #4CAF50;
             font-weight: bold;
         }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .cta {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .cta:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Appointment Confirmation</h1>
-        <p>Dear <span class="highlight">{{ $name }}</span>,</p>
-        <p>Your appointment with Dr. <span class="highlight">{{ $doctor }}</span> has been confirmed.</p>
-        <p><strong>Date:</strong> <span class="highlight">{{ $date }}</span></p>
-        <p><strong>Message:</strong> {{ $message_content }}</p>
-        <p>Thank you for choosing <strong>One Health +</strong>. We look forward to serving you.</p>
+        <div class="header">
+            <h1>Appointment Confirmation</h1>
+        </div>
+        <div class="content">
+            <p>Dear <span class="highlight">{{ $name }}</span>,</p>
+            <p>We are pleased to inform you that your appointment with <strong>Dr. {{ $doctor }}</strong> has been successfully confirmed.</p>
+            <p><strong>Details of your appointment:</strong></p>
+            <ul>
+                <li><strong>Date:</strong> <span class="highlight">{{ $date }}</span></li>
+                <li><strong>Message:</strong> {{ $message_content }}</li>
+            </ul>
+            <p>Please arrive at least 15 minutes before your scheduled time to complete any necessary paperwork. If you have any questions, feel free to contact our support team.</p>
+            <a href="http://127.0.0.1:8000/userapp" class="cta">View Appointment Details</a>
+        </div>
         <div class="footer">
             <p>&copy; 2024 One Health +. All rights reserved.</p>
+            <p>For inquiries, please contact us at <a href="mailto:support@onehealth-plus.com">support@onehealth-plus.com</a>.</p>
         </div>
     </div>
 </body>

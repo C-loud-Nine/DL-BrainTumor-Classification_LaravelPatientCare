@@ -11,10 +11,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-
     <!-- Confirmed Appointments -->
-
-
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
             <h5>Confirmed Appointments</h5>
@@ -50,6 +47,7 @@
                 </table>
             @endif
         </div>
+    </div>
 
     <!-- Approved Appointments -->
     <div class="card mb-4">
@@ -92,7 +90,6 @@
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger">Reject</button>
                                     </form>
-
                                 </td>
                             </tr>
                         @endforeach
@@ -153,7 +150,9 @@
 </div>
 
 <x-footer />
+
 @include('admin.script')
+
 <style>
     .card-header {
         font-weight: bold;
@@ -195,5 +194,10 @@
 
     .btn-danger:hover {
         background-color: #c82333;
+    }
+
+    /* Adjustments for the footer */
+    footer {
+        clear: both;
     }
 </style>

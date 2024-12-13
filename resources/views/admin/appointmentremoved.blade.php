@@ -89,7 +89,7 @@
         <div class="content-wrapper">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Confirmed Appointments</h4>
+              <h4 class="card-title">Removed Appointments</h4>
 
               <!-- Display success message -->
               @if(session('success'))
@@ -120,7 +120,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach($confirmedAppointments as $appointment)
+                  @foreach($Appointments as $appointment)
                   <tr>
                     <td>{{ $appointment->id }}</td>
                     <td>{{ $appointment->name }}</td>
@@ -130,25 +130,17 @@
                     <td>{{ $appointment->doctor }}</td>
                     <td>{{ $appointment->date }}</td>
                     <td>
-                      <span class="badge badge-success">Confirmed</span>
+                      <span class="badge badge-primary">Removed</span>
                     </td>
                     
                     
                     
                     <td>
-                        <form action="{{ route('admin.appointmentconfirm.sendMail', $appointment->id) }}" method="POST" style="display:inline;">
+                       
+                       
+                        <form action="{{ route('admin.appointmentremoved.delete', $appointment->id) }}" method="POST" style="display:inline;">
                             @csrf
-                            <button type="submit" class="btn btn-primary btn-sm">Send Mail</button>
-                        </form>
-
-                        <form action="{{ route('admin.appointmentconfirm.update', $appointment->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn btn-update btn-sm">To Pending</button>
-                        </form>
-
-                        <form action="{{ route('admin.appointmentconfirm.delete', $appointment->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this appointment?')">Remove</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</button>
                         </form>
                     </td>
 

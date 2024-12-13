@@ -10,15 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Report;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class HomeController extends Controller
 {
-    // public function index()
-    // {
-    //     return view('user.home');
-    // }
-
+  
     
 
     public function index()
@@ -131,75 +128,6 @@ class HomeController extends Controller
 
 
     
-//       public function doctorprofile()
-//       {
-//           // Retrieve the currently authenticated user using session
-//           if (!session()->has('user_id')) {
-//               return redirect()->route('login')->with('error', 'Please log in to view your profile.');
-//           }
-   
-//           $doc = User::find(session('user_id'));
-   
-//           return view('user.doctorprofile', compact('doc'));
-//       }
-   
-    
-//       public function updateDoctorProfile(Request $request, $id)
-//       {
-   
-       
-   
-//           // Validate input
-//        $request->validate([
-//            'name' => 'required|string|max:255',
-//            'location' => 'nullable|string|max:255',
-//            'password' => 'nullable|string|min:8',
-//            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-//        ]);
-   
-//        // Find the user
-//        $doc = User::findOrFail($id);
-   
-//        // Update user fields
-//        $doc->name = $request->name;
-//        $doc->location = $request->location;
-   
-//        // Update password if provided
-//        if ($request->filled('password')) {
-//            $doc->password = Hash::make($request->password);
-//        }
-   
-//        // Handle profile picture upload
-//        if ($request->hasFile('profile_picture')) {
-//            $file = $request->file('profile_picture');
-//            $filename = time() . '.' . $file->getClientOriginalExtension();
-//            $file->move(public_path('uploads/profile'), $filename);
-//            $doc->picture = $filename;
-//        }
-   
-//        // Save the user
-//        $doc->save();
-   
-//        // Redirect with success message
-//        return redirect()->back()->with('success', 'Profile updated successfully!');
-      
-//    }
-
-
-
-// public function doctorprofile()
-// {
-//     // Retrieve the currently authenticated user using session
-//     if (!session()->has('user_id')) {
-//         return redirect()->route('login')->with('error', 'Please log in to view your profile.');
-//     }
-
-//     // Fetch the user's doctor data
-//     $doc = User::with('doctor')->find(session('user_id'));
-
-//     return view('user.doctorprofile', compact('doc'));
-// }
-
 
 
 public function doctorprofile()
@@ -516,15 +444,16 @@ public function showAppointments()
 
     // Get appointments for the doctor based on the name stored in the session
     $appointments = Appointment::where('doctor', $doctorName)  // Use the 'doctor' column directly
+        ->whereIn('status', ['pending', 'confirmed'])  // Correct filter for pending and confirmed status
         ->orderBy('date', 'asc')  // Order by appointment date
         ->get()
         ->groupBy(function ($appointment) {
+            // Ensure the 'date' field is in a valid format
             return Carbon::parse($appointment->date)->format('Y-m-d');
         });
 
     return view('user.doctorapplist', compact('doctorName', 'appointments'));
 }
-
 
 
 public function showReports()
@@ -541,6 +470,41 @@ public function showReports()
     // Return the view with the necessary data
     return view('user.docreport', compact('reports', 'uniqueScannerNames', 'doctorName'));
 }
+
+
+
+ 
+
+
+public function generateReport($id)
+{
+    // Find the report by ID
+    $report = Report::findOrFail($id);
+
+    // Calculate the follow-up date (2 months after the report date)
+    $follow_up_date = $report->created_at->addMonths(2)->format('d-m-Y'); // You can format it as you wish
+
+    // Prepare the data to be passed to the view
+    $data = [
+        'user_name' => $report->user_name,
+        'scanner_name' => $report->scanner_name ?? 'Not Assigned',
+        'report_class' => $report->report_class,
+        'confidence' => number_format($report->confidence * 100, 2),
+        'created_at' => $report->created_at->format('d-m-Y H:i'),
+        'report_date' => $report->created_at->format('l, d F Y H:i:s'),
+        'assessment' => 'The patient’s MRI scan reveals significant findings indicating potential abnormalities. Further evaluation and follow-up are advised.',
+        'suggestions' => 'We recommend additional diagnostic tests to confirm the findings. A follow-up consultation with the assigned physician is crucial for treatment planning.',
+        'follow_up_date' => $follow_up_date, // Add the follow-up date to the data
+        'report_image' => $report->report_image ? public_path('uploads/mri/'.$report->report_image) : null, // Use public_path for file path
+    ];
+
+    // Generate the PDF using the view with the data
+    $pdf = Pdf::loadView('pdf.report', $data);
+
+    // Return the generated PDF as a download
+    return $pdf->download('MRI_Report_' . $report->id . '.pdf');
+}
+
 
 
 
