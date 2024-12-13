@@ -9,6 +9,8 @@ use App\Models\Appointment;
 use App\Models\Report;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+
 
 class AdminController extends Controller
 {
@@ -355,6 +357,32 @@ public function viewNoShowAppointments()
 }
 
 
+
+
+
+public function sendConfirmationEmail($id)
+{
+    $appointment = Appointment::findOrFail($id);
+
+    $email = $appointment->email;
+    $data = [
+        'name' => $appointment->name,
+        'doctor' => $appointment->doctor,
+        'date' => $appointment->date,
+        'message_content' => $appointment->message, // Renamed to avoid conflict
+    ];
+
+    try {
+        Mail::send('email.appointment_confirmation', $data, function ($mailMessage) use ($email) {
+            $mailMessage->to($email)
+                        ->subject('Appointment Confirmation');
+        });
+
+        return back()->with('success', 'Confirmation email sent successfully.');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+    }
+}
 
 
 }

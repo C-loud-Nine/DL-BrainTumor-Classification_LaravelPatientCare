@@ -153,7 +153,7 @@
 </div>
 
 <x-footer />
-
+@include('admin.script')
 <style>
     .card-header {
         font-weight: bold;
