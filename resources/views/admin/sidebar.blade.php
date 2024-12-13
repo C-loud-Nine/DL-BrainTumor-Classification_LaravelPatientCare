@@ -116,6 +116,7 @@
                 <li class="nav-item"> <a class="nav-link" href="{{route('admin.appointmentapprove')}}">Pending List</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{route('admin.appointmentconfirm')}}">Confirmed List</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{route('admin.adminnoshow')}}">No show List</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{route('admin.appointmentremoved')}}">Removed List</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{route('admin.admindoctorapp')}}">DoctorApp</a></li>
               </ul>
             </div>

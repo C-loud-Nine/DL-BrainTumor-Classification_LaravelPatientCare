@@ -341,6 +341,9 @@
   </div>
 </div>
 
+
+<x-footer />
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('doctorModal');
