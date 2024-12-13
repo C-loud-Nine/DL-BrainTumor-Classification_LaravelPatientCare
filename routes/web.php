@@ -173,3 +173,4 @@ Route::get('/doctorapplist', [HomeController::class, 'showAppointments'])->name(
 
 
 Route::get('/docreport', [HomeController::class, 'showReports'])->name('docreport');
+Route::post('/docreport/verdict', [HomeController::class, 'saveVerdict'])->name('saveVerdict');
