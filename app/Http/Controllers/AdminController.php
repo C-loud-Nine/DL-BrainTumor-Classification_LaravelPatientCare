@@ -9,6 +9,8 @@ use App\Models\Appointment;
 use App\Models\Report;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+
 
 class AdminController extends Controller
 {
@@ -298,9 +300,11 @@ public function showConfirmedAppointments()
         $appointment = Appointment::find($id);
 
         if ($appointment) {
-            $appointment->delete();
-
-            return redirect()->back()->with('success', 'Appointment deleted successfully.');
+            // Update status to "pending"
+            $appointment->status = 'removed';
+            $appointment->save();
+    
+            return redirect()->back()->with('success', 'Appointment removed successfully.');
         }
 
         return redirect()->back()->with('error', 'Appointment not found.');
@@ -319,16 +323,7 @@ public function showConfirmedAppointments()
 
 
 
-    // public function fetchDoctorAppointments(Request $request)
-    // {
-    //     // Fetch all confirmed appointments for the selected doctor
-    //     $appointments = Appointment::where('doctor', $request->doctor)
-    //         ->where('status', 'confirmed')
-    //         ->orderBy('date', 'asc')
-    //         ->get();
-
-    //     return response()->json($appointments);
-    // }
+    
 
     public function fetchDoctorAppointments(Request $request)
 {
@@ -355,6 +350,54 @@ public function viewNoShowAppointments()
 }
 
 
+
+
+
+public function sendConfirmationEmail($id)
+{
+    $appointment = Appointment::findOrFail($id);
+
+    $email = $appointment->email;
+    $data = [
+        'name' => $appointment->name,
+        'doctor' => $appointment->doctor,
+        'date' => $appointment->date,
+        'message_content' => $appointment->message, // Renamed to avoid conflict
+    ];
+
+    try {
+        Mail::send('email.appointment_confirmation', $data, function ($mailMessage) use ($email) {
+            $mailMessage->to($email)
+                        ->subject('Appointment Confirmation');
+        });
+
+        return back()->with('success', 'Confirmation email sent successfully.');
+    } catch (\Exception $e) {
+        return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+    }
+}
+
+
+    public function showRemovedAppointments()
+    {
+        // Fetch only confirmed appointments
+        $Appointments = Appointment::where('status', 'removed')->get();
+
+        return view('admin.appointmentremoved', compact('Appointments'));
+    }
+
+
+    public function deleteRemovedAppointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+
+        try {
+            $appointment->delete();
+            return redirect()->route('admin.appointmentremoved')->with('success', 'Appointment deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.appointmentremoved')->with('error', 'Failed to delete the appointment.');
+        }
+    }
 
 
 }

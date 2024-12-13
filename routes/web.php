@@ -9,6 +9,10 @@ use App\Http\Controllers\ImageUploadController;
 
 
 
+Route::get('/generate-report/{id}', [HomeController::class, 'generateReport'])->name('generateReport');
+
+Route::post('/appointmentconfirm/send-mail/{id}', [AdminController::class, 'sendConfirmationEmail'])->name('admin.appointmentconfirm.sendMail');
+
 
 Route::get('/appointmentconfirm', [AdminController::class, 'showConfirmedAppointments'])->name('admin.appointmentconfirm');
 
@@ -16,8 +20,10 @@ Route::post('/appointmentconfirm/update/{id}', [AdminController::class, 'updateA
 
 
 // Delete appointment
-Route::delete('/appointmentconfirm/delete/{id}', [AdminController::class, 'deleteConfirmedAppointment'])->name('admin.appointmentconfirm.delete');
+Route::post('/appointmentconfirm/delete/{id}', [AdminController::class, 'deleteConfirmedAppointment'])->name('admin.appointmentconfirm.delete');
 
+Route::get('/appointmentremoved', [AdminController::class, 'showRemovedAppointments'])->name('admin.appointmentremoved');
+Route::delete('/appointmentremoved/delete/{id}', [AdminController::class, 'deleteRemovedAppointment'])->name('admin.appointmentremoved.delete');
 
 
 
@@ -166,3 +172,4 @@ Route::get('/appointmentpage', [HomeController::class, 'appointmentpage'])->name
 Route::get('/doctorapplist', [HomeController::class, 'showAppointments'])->name('doctorapplist');
 
 
+Route::get('/docreport', [HomeController::class, 'showReports'])->name('docreport');

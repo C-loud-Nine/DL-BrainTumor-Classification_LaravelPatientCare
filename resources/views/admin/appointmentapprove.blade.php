@@ -179,11 +179,10 @@
                     <td>
                       <button type="submit" class="btn btn-success btn-sm">Update</button>
                       </form>
-                      <form action="{{ route('admin.appointmentapprove.delete', $appointment->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</button>
-                      </form>
+                      <form action="{{ route('admin.appointmentconfirm.delete', $appointment->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this appointment?')">Remove</button>
+                        </form>
                     </td>
                   </tr>
                   @endforeach
