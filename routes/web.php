@@ -10,6 +10,10 @@ use App\Http\Controllers\ImageUploadController;
 
 
 
+
+Route::post('/appointmentconfirm/send-mail/{id}', [AdminController::class, 'sendConfirmationEmail'])->name('admin.appointmentconfirm.sendMail');
+
+
 Route::get('/appointmentconfirm', [AdminController::class, 'showConfirmedAppointments'])->name('admin.appointmentconfirm');
 
 Route::post('/appointmentconfirm/update/{id}', [AdminController::class, 'updateAppointmentStatus'])->name('admin.appointmentconfirm.update');

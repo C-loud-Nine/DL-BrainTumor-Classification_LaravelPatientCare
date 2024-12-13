@@ -132,20 +132,28 @@
                     <td>
                       <span class="badge badge-success">Confirmed</span>
                     </td>
+                    
+                    
+                    
                     <td>
-                      <form action="{{ route('admin.appointmentconfirm.update', $appointment->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('admin.appointmentconfirm.sendMail', $appointment->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm">Send Mail</button>
+                        </form>
+
+                        <form action="{{ route('admin.appointmentconfirm.update', $appointment->id) }}" method="POST" style="display:inline;">
                             @csrf
                             <button type="submit" class="btn btn-update btn-sm">To Pending</button>
                         </form>
 
-                      
-                      <!-- Delete button for confirmed appointments -->
-                      <form action="{{ route('admin.appointmentconfirm.delete', $appointment->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</button>
-                      </form>
+                        <form action="{{ route('admin.appointmentconfirm.delete', $appointment->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this appointment?')">Delete</button>
+                        </form>
                     </td>
+
+
                   </tr>
                   @endforeach
                 </tbody>
