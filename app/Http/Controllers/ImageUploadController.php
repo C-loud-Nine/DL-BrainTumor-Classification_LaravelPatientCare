@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Report;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Log;  
 
 
 
@@ -72,12 +72,12 @@ class ImageUploadController extends Controller
                 // Prepare the image for FastAPI prediction
                 $imageData = fopen($uploadPath . $imageName, 'r');
                 $response = Http::attach('file', $imageData, $imageName)
-                    ->post(env('FASTAPI_URL') . '/predict');
+                    ->post(env('FASTAPI_URL_2') . '/predict');
         
                 if ($response->successful()) {
                     $result = $response->json();
         
-                    // Get session data
+                    // // Get session data
                     $scannerName = session('user_name');
                     $scannerId = session('user_id');
                     $userName = session('user_name');
@@ -366,6 +366,153 @@ class ImageUploadController extends Controller
                 return back()->withErrors(['message' => 'Error connecting to FastAPI: ' . $e->getMessage()]);
             }
         }
+
+
+
+////////////////////////////////////////////////////
+
+
+
+
+public function forcefulTumorClassification(Request $request)
+{
+    try {
+        // Retrieve the image path from the form submission
+        $imageUrl = $request->input('imagePath');
+
+        // Log the received image URL for debugging
+        Log::debug('Received image URL: ' . $imageUrl);
+
+        // Convert the URL to a local file path
+        $imagePath = public_path('uploads/mri/' . basename($imageUrl)); // Correct path to check file existence
+
+        // Log the converted file path for debugging
+        Log::debug('Converted image file path: ' . $imagePath);
+
+        // Validate the file existence
+        if (!file_exists($imagePath)) {
+            Log::debug('Image file does not exist: ' . $imagePath);
+            return back()->withErrors(['message' => 'Image file does not exist.']);
+        }
+
+        // Check if the file is readable
+        if (!is_readable($imagePath)) {
+            Log::debug('Image file is not readable: ' . $imagePath);
+            return back()->withErrors(['message' => 'Image file is not readable.']);
+        }
+
+        // Log that the file exists and is readable
+        Log::debug('Image file exists and is readable: ' . $imagePath);
+
+        // Open the image file for reading
+        $imageData = fopen($imagePath, 'r');
+
+        // Log the start of file reading
+        Log::debug('Opening image file for reading: ' . $imagePath);
+
+        // Send the image to FastAPI for prediction
+        $response = Http::attach('file', $imageData, basename($imagePath))
+            ->post(env('FASTAPI_URL') . '/predict');
+
+        // Close the file after the request
+        fclose($imageData);
+
+        // Check if the response was successful
+        if ($response->successful()) {
+            $result = $response->json();
+
+            // Log the prediction result
+            Log::debug('Prediction successful: ' . json_encode($result));
+
+            // Redirect with the prediction result and image URL
+            return redirect()->route('usermri')->with([
+                'result' => $result,
+                'imageUrl' => asset('uploads/mri/' . basename($imagePath)), // Generate the full URL for the frontend
+            ]);
+        }
+
+        // Handle failed predictions
+        Log::debug('Prediction failed for image: ' . $imagePath);
+        return back()->withErrors(['message' => 'Tumor classification failed. Please try again.']);
+    } catch (\Exception $e) {
+        // Log any exception message
+        Log::error('Error connecting to FastAPI: ' . $e->getMessage());
+        return back()->withErrors(['message' => 'Error connecting to FastAPI: ' . $e->getMessage()]);
+    }
+}
+
+
+
+
+public function forcefulTumorClassification2(Request $request)
+{
+    try {
+        // Retrieve the image path from the form submission
+        $imageUrl = $request->input('imagePath');
+
+        // Log the received image URL for debugging
+        Log::debug('Received image URL: ' . $imageUrl);
+
+        // Convert the URL to a local file path
+        $imagePath = public_path('uploads/mri/' . basename($imageUrl)); // Correct path to check file existence
+
+        // Log the converted file path for debugging
+        Log::debug('Converted image file path: ' . $imagePath);
+
+        // Validate the file existence
+        if (!file_exists($imagePath)) {
+            Log::debug('Image file does not exist: ' . $imagePath);
+            return back()->withErrors(['message' => 'Image file does not exist.']);
+        }
+
+        // Check if the file is readable
+        if (!is_readable($imagePath)) {
+            Log::debug('Image file is not readable: ' . $imagePath);
+            return back()->withErrors(['message' => 'Image file is not readable.']);
+        }
+
+        // Log that the file exists and is readable
+        Log::debug('Image file exists and is readable: ' . $imagePath);
+
+        // Open the image file for reading
+        $imageData = fopen($imagePath, 'r');
+
+        // Log the start of file reading
+        Log::debug('Opening image file for reading: ' . $imagePath);
+
+        // Send the image to FastAPI for prediction
+        $response = Http::attach('file', $imageData, basename($imagePath))
+            ->post(env('FASTAPI_URL') . '/predict');
+
+        // Close the file after the request
+        fclose($imageData);
+
+        // Check if the response was successful
+        if ($response->successful()) {
+            $result = $response->json();
+
+            // Log the prediction result
+            Log::debug('Prediction successful: ' . json_encode($result));
+
+            // Redirect with the prediction result and image URL
+            return redirect()->route('usermri2')->with([
+                'result' => $result,
+                'imageUrl' => asset('uploads/mri/' . basename($imagePath)), // Generate the full URL for the frontend
+            ]);
+        }
+
+        // Handle failed predictions
+        Log::debug('Prediction failed for image: ' . $imagePath);
+        return back()->withErrors(['message' => 'Tumor classification failed. Please try again.']);
+    } catch (\Exception $e) {
+        // Log any exception message
+        Log::error('Error connecting to FastAPI: ' . $e->getMessage());
+        return back()->withErrors(['message' => 'Error connecting to FastAPI: ' . $e->getMessage()]);
+    }
+}
+
+////////////////////////////////////////////////
+
 
 
         public function usermri3()
