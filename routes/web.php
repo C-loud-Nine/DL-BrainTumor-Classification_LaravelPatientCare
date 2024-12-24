@@ -62,6 +62,7 @@ Route::post('/userapp/reject/{id}', [HomeController::class, 'rejectAppointment']
 
 Route::get('/usermri', [ImageUploadController::class, 'usermri'])->name('usermri');
 Route::post('/usermri/predict', [ImageUploadController::class, 'uploadAndPredict'])->name('upload.predict');
+
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/doctormri', [ImageUploadController::class, 'doctormri'])->name('doctormri');
 Route::post('/doctormri/doctorScanReport', [ImageUploadController::class, 'doctorScanReport'])->name('doctorScanReport');
@@ -70,6 +71,12 @@ Route::post('/userreportlist/delete', [ImageUploadController::class, 'deleteRepo
 
 Route::get('/usermri2', [ImageUploadController::class, 'usermri2'])->name('usermri2');
 Route::post('/usermri2/predict', [ImageUploadController::class, 'uploadAndPredict2'])->name('upload.predict2');
+
+Route::post('/usermri2/forceful', [ImageUploadController::class, 'forcefulTumorClassification2'])->name('forceful.mritumor2');
+
+Route::post('/usermri/forceful', [ImageUploadController::class, 'forcefulTumorClassification'])->name('forceful.mritumor');
+
+
 
 Route::get('/usermri3', [ImageUploadController::class, 'usermri3'])->name('usermri3');
 Route::post('/usermri3/predict', [ImageUploadController::class, 'uploadAndPredict3'])->name('upload.predict3');
@@ -173,3 +180,4 @@ Route::get('/doctorapplist', [HomeController::class, 'showAppointments'])->name(
 
 
 Route::get('/docreport', [HomeController::class, 'showReports'])->name('docreport');
+Route::post('/docreport/verdict', [HomeController::class, 'saveVerdict'])->name('saveVerdict');

@@ -1,5 +1,3 @@
-<!-- resources/views/user/usermri.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +17,6 @@
             </div>
         @endif
 
-
         <!-- Upload Form -->
         <div class="card p-5 shadow-lg mb-4">
             <form action="{{ route('upload.predict') }}" method="POST" enctype="multipart/form-data">
@@ -36,23 +33,42 @@
 
         <!-- Prediction Result Section -->
         @if(session('result') && session('imageUrl'))
-        <div class="result-section text-center mt-5 mb-5">
-            <h2 class="text-success fw-bold">Prediction Result</h2>
-            <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
-            <div class="result-text mt-4">
-                <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span></p>
-                <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> <span class="text-warning fs-4">{{ number_format(session('result')['confidence'] * 100, 2) }}%</span></p>
+            <div class="result-section text-center mt-5 mb-5">
+                <h2 class="text-success fw-bold">Prediction Result</h2>
+                <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
+                <div class="result-text mt-4">
+                    @if(session('result')['is_mri'])
+                        <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong>
+                            <span class="text-primary fs-4">{{ session('result')['prediction'] ?? 'No prediction available' }}</span>
+                        </p>
+                        <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong>
+                            <span class="text-warning fs-4">
+                                {{ session('result')['confidence'] ? number_format(session('result')['confidence'] * 100, 2) : 'No confidence data' }}%
+                            </span>
+                        </p>
+                    @else
+                        <p class="fs-3 mb-3">
+                            <span class="text-danger fs-4">Non-MRI Image</span>
+                        </p>
+                        <p class="fs-3 mb-3 text-muted">The uploaded image was classified as a non-MRI image.</p>
+                        <p class="fs-3 mb-3 text-muted">Please upload an MRI image.</p>
+                        <form action="{{ route('forceful.mritumor') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="imagePath" value="{{ session('imageUrl') }}">
+                            <button type="submit" class="btn btn-danger">Proceed to Tumor Classification</button>
+                        </form>
+                    @endif
+                </div>
             </div>
-        </div>
         @endif
 
         <!-- Errors Section -->
         @if($errors->any())
-        <div class="alert alert-danger mt-4">
-            @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
-        </div>
+            <div class="alert alert-danger mt-4">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
         @endif
     </div>
 
@@ -61,7 +77,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 
 
 @include('admin.script')
