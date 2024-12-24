@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Report;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\RepVerdict;
 
 
 class HomeController extends Controller
@@ -464,11 +465,13 @@ public function showReports()
     // Fetch all reports and order them by the creation timestamp (latest first)
     $reports = Report::orderBy('created_at', 'desc')->get();
 
+    $ver = RepVerdict::all();
+
     // Get unique scanner names for filtering purposes
     $uniqueScannerNames = Report::distinct('scanner_name')->pluck('scanner_name');
 
     // Return the view with the necessary data
-    return view('user.docreport', compact('reports', 'uniqueScannerNames', 'doctorName'));
+    return view('user.docreport', compact('reports', 'uniqueScannerNames', 'doctorName' , 'ver'));
 }
 
 
@@ -503,6 +506,33 @@ public function generateReport($id)
 
     // Return the generated PDF as a download
     return $pdf->download('MRI_Report_' . $report->id . '.pdf');
+}
+
+
+public function saveVerdict(Request $request)
+{
+    try {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'report_id' => 'required|exists:reports,id',
+            'verdict' => 'required|in:Yes,No',
+        ]);
+
+        // Save verdict in the `repverdict` table
+        RepVerdict::updateOrCreate(
+            ['report_id' => $validated['report_id']], // Check for existing record
+            ['verdict' => $validated['verdict']] // Update or create the verdict
+        );
+
+        // Return a success message (you can handle this differently if needed)
+        return back()->with('success', 'Verdict saved successfully!');
+    } catch (\Exception $e) {
+        // Log the error for debugging
+        \Log::error('Error saving verdict: ' . $e->getMessage());
+
+        // Return a generic error message
+        return back()->with('error', 'An error occurred while saving the verdict. Please try again.');
+    }
 }
 
 
