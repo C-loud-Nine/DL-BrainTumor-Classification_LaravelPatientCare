@@ -36,15 +36,36 @@
 
         <!-- Prediction Result Section -->
         @if(session('result') && session('imageUrl'))
-        <div class="result-section text-center mt-5 mb-5">
-            <h2 class="text-success fw-bold">Prediction Result</h2>
-            <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
-            <div class="result-text mt-4">
-                <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span></p>
-                <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> <span class="text-warning fs-4">{{ number_format(session('result')['confidence'] * 100, 2) }}%</span></p>
-            </div>
-        </div>
-        @endif
+    <div class="result-section text-center mt-5 mb-5">
+        <h2 class="text-success fw-bold">Prediction Result</h2>
+        <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
+        <div class="result-text mt-4">
+            <!-- Display MRI classification -->
+            @if(session('result')['is_mri'])
+                            <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> 
+                                <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span>
+                            </p>
+                            <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> 
+                                <span class="text-warning fs-4">{{ session('result')['confidence'] }}</span>
+                            </p>
+                        @else
+                            <p class="fs-3 mb-3">
+                                <span class="text-danger fs-4">Non-MRI Image</span>
+                            </p>
+                            <p class="fs-3 mb-3 text-muted">The uploaded image was classified as a non-MRI image.</p>
+                            <p class="fs-3 mb-3 text-muted">Please upload a MRI image.</p>
+                            <!-- Show button to forcefully proceed -->
+                            <form action="{{ route('forceful.mritumor2') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="imagePath" value="{{ session('imageUrl') }}">
+                                <button type="submit" class="btn btn-danger">Proceed to Tumor Classification</button>
+                            </form>
+
+                        @endif
+                    </div>
+                </div>
+            @endif
+
 
         <!-- Errors Section -->
         @if($errors->any())
