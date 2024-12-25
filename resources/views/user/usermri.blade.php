@@ -38,14 +38,12 @@
                 <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
                 <div class="result-text mt-4">
                     @if(session('result')['is_mri'])
-                        <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong>
-                            <span class="text-primary fs-4">{{ session('result')['prediction'] ?? 'No prediction available' }}</span>
-                        </p>
-                        <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong>
-                            <span class="text-warning fs-4">
-                                {{ session('result')['confidence'] ? number_format(session('result')['confidence'] * 100, 2) : 'No confidence data' }}%
-                            </span>
-                        </p>
+                        <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> 
+                                <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span>
+                            </p>
+                            <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> 
+                                <span class="text-warning fs-4">{{ session('result')['confidence'] }}</span>
+                            </p>
                     @else
                         <p class="fs-3 mb-3">
                             <span class="text-danger fs-4">Non-MRI Image</span>
@@ -61,6 +59,8 @@
                 </div>
             </div>
         @endif
+
+        
 
         <!-- Errors Section -->
         @if($errors->any())
