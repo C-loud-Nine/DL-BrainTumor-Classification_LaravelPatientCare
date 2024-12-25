@@ -76,7 +76,9 @@ class ImageUploadController extends Controller
         
                 if ($response->successful()) {
                     $result = $response->json();
-        
+                    
+
+                    if(isset($result['prediction'], $result['confidence'])){
                     // // Get session data
                     $scannerName = session('user_name');
                     $scannerId = session('user_id');
@@ -97,6 +99,8 @@ class ImageUploadController extends Controller
                         'confidence' => $confidence,
                         'report_image' => $imageName, // Save only the image name
                     ]);
+
+                }
         
                     // Redirect with results
                     return redirect()->route('usermri')->with([
