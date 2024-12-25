@@ -24,6 +24,14 @@
         </div>
       </div>
 
+      <!-- Age Input -->
+      <div class="row mb-2"> <!-- Reduced margin-bottom -->
+        <div class="col-12 py-2 wow fadeInUp">
+          <label for="name">Age</label>
+          <input type="text" id="age" class="form-control" name="age" placeholder="Age" required>
+        </div>
+      </div>
+
       <!-- Password Input -->
       <div class="row mb-2"> <!-- Reduced margin-bottom -->
         <div class="col-12 py-2 wow fadeInUp">
