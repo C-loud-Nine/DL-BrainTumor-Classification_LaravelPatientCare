@@ -479,17 +479,55 @@ public function showReports()
  
 
 
+// public function generateReport($id)
+// {
+//     // Find the report by ID
+//     $report = Report::findOrFail($id);
+
+//     // Calculate the follow-up date (2 months after the report date)
+//     $follow_up_date = $report->created_at->addMonths(2)->format('d-m-Y'); // You can format it as you wish
+
+//     // Prepare the data to be passed to the view
+//     $data = [
+//         'user_name' => $report->user_name,
+//         'scanner_name' => $report->scanner_name ?? 'Not Assigned',
+//         'report_class' => $report->report_class,
+//         'confidence' => number_format($report->confidence * 100, 2),
+//         'created_at' => $report->created_at->format('d-m-Y H:i'),
+//         'report_date' => $report->created_at->format('l, d F Y H:i:s'),
+//         'assessment' => 'The patient’s MRI scan reveals significant findings indicating potential abnormalities. Further evaluation and follow-up are advised.',
+//         'suggestions' => 'We recommend additional diagnostic tests to confirm the findings. A follow-up consultation with the assigned physician is crucial for treatment planning.',
+//         'follow_up_date' => $follow_up_date, // Add the follow-up date to the data
+//         'report_image' => $report->report_image ? public_path('uploads/mri/'.$report->report_image) : null, // Use public_path for file path
+//     ];
+
+//     // Generate the PDF using the view with the data
+//     $pdf = Pdf::loadView('pdf.report', $data);
+
+//     // Return the generated PDF as a download
+//     return $pdf->download('MRI_Report_' . $report->id . '.pdf');
+// }
+
+
+
 public function generateReport($id)
 {
     // Find the report by ID
     $report = Report::findOrFail($id);
 
+    // Retrieve the user associated with the report
+    $user = User::find($report->user_id);
+
+    // Set the age field based on whether the user is found
+    $age = $user ? $user->age : 'N/A';
+
     // Calculate the follow-up date (2 months after the report date)
-    $follow_up_date = $report->created_at->addMonths(2)->format('d-m-Y'); // You can format it as you wish
+    $follow_up_date = $report->created_at->addMonths(2)->format('d-m-Y'); // Format as needed
 
     // Prepare the data to be passed to the view
     $data = [
         'user_name' => $report->user_name,
+        'age' => $age, // Set age dynamically
         'scanner_name' => $report->scanner_name ?? 'Not Assigned',
         'report_class' => $report->report_class,
         'confidence' => number_format($report->confidence * 100, 2),
@@ -498,7 +536,7 @@ public function generateReport($id)
         'assessment' => 'The patient’s MRI scan reveals significant findings indicating potential abnormalities. Further evaluation and follow-up are advised.',
         'suggestions' => 'We recommend additional diagnostic tests to confirm the findings. A follow-up consultation with the assigned physician is crucial for treatment planning.',
         'follow_up_date' => $follow_up_date, // Add the follow-up date to the data
-        'report_image' => $report->report_image ? public_path('uploads/mri/'.$report->report_image) : null, // Use public_path for file path
+        'report_image' => $report->report_image ? public_path('uploads/mri/' . $report->report_image) : null, // Use public_path for file path
     ];
 
     // Generate the PDF using the view with the data
@@ -507,6 +545,7 @@ public function generateReport($id)
     // Return the generated PDF as a download
     return $pdf->download('MRI_Report_' . $report->id . '.pdf');
 }
+
 
 
 public function saveVerdict(Request $request)

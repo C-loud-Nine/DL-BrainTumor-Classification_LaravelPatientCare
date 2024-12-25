@@ -167,6 +167,7 @@
         <div class="info-block">
             <div class="info-left">
                 <p><strong>Patient Name:</strong> {{ $user_name }}</p>
+                <p><strong>Age:</strong> {{ $age }}</p>
                 <p><strong>Doctor:</strong> {{ $scanner_name }}</p>
                 <p><strong>Report Type:</strong> {{ $report_class }}</p>
                 <p><strong>Confidence Level:</strong> {{ $confidence }}%</p>

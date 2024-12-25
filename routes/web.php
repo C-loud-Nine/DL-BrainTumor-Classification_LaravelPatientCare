@@ -56,6 +56,7 @@ Route::post('/usermri2/forceful', [ImageUploadController::class, 'forcefulTumorC
 
 Route::get('/usermri3', [ImageUploadController::class, 'usermri3'])->name('usermri3');
 Route::post('/usermri3/predict', [ImageUploadController::class, 'uploadAndPredict3'])->name('upload.predict3');
+Route::post('/usermri3/forceful', [ImageUploadController::class, 'forcefulTumorClassification3'])->name('forceful.mritumor3');
 
 
 
