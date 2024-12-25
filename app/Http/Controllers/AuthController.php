@@ -24,6 +24,7 @@ class AuthController extends Controller
         $newUser = new User();
         $newUser->name = $request->input('name');
         $newUser->email = $request->input('email');
+        $newUser->age = $request->input('age');
         $newUser->password = Hash::make($request->input('password'));  // Hash the password
 
         // Handle file upload
