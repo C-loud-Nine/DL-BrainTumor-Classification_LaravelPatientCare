@@ -3,14 +3,21 @@
 <div class="container my-5">
     <h1 class="text-center text-primary">Doctor's Reports</h1>
 
-       <!-- Filter Dropdown -->
-       <div class="mb-4 d-flex justify-content-end">
-     
+        <!-- Filter and Search Section -->
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <!-- Filter Dropdown -->
+        <div>
             <select class="form-select custom-dropdown" id="doctorFilter">
                 <option value="">All Reports</option>
                 <option value="{{ $doctorName }}">Your Reports ({{ $doctorName }})</option>
             </select>
         </div>
+
+        <!-- Search Input -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search reports...">
+        </div>
+    </div>
 
     <!-- Reports Table -->
     <table class="table table-bordered table-striped" id="reportsTable">
@@ -146,10 +153,39 @@
         });
     });
 
+
+       // Script for searching reports
+       document.getElementById('searchInput').addEventListener('input', function() {
+            var searchQuery = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#reportsTable tbody tr');
+
+            rows.forEach(function(row) {
+                var textContent = row.textContent.toLowerCase();
+                if (textContent.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
     
 </script>
 
 <style>
+
+.search-container input {
+        width: 300px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+    .search-container input:focus {
+        border-color: #007bff;
+    }
+
     .form-select {
         width: 250px;
         margin-bottom: 20px;
