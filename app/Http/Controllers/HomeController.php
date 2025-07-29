@@ -21,6 +21,7 @@ class HomeController extends Controller
 
     public function index()
     {
+        
         // Retrieve users of type 'doctor' with their associated doctor information
         $doctors = User::with('doctor')
             ->where('type', 'doctor')
