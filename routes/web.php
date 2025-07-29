@@ -45,6 +45,15 @@ Route::post('/doctormri/doctorScanReport', [ImageUploadController::class, 'docto
 Route::get('/userreportlist', [ImageUploadController::class, 'userreportlist'])->name('userreportlist');
 Route::post('/userreportlist/delete', [ImageUploadController::class, 'deleteReport'])->name('deleteReport');
 
+Route::get('/doctormri2', [ImageUploadController::class, 'doctormri2'])->name('doctormri2');
+Route::post('/doctormri/doctorScanReport2', [ImageUploadController::class, 'doctorScanReport2'])->name('doctorScanReport2');
+
+
+
+Route::get('/doctormri3', [ImageUploadController::class, 'doctormri3'])->name('doctormri3');
+Route::post('/doctormri/doctorScanReport3', [ImageUploadController::class, 'doctorScanReport3'])->name('doctorScanReport3');
+
+
 
 Route::get('/usermri2', [ImageUploadController::class, 'usermri2'])->name('usermri2');
 Route::post('/usermri2/predict', [ImageUploadController::class, 'uploadAndPredict2'])->name('upload.predict2');

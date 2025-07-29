@@ -51,14 +51,14 @@
       <div class="container">
         <a class="navbar-brand" href="#"><span class="text-primary">One</span>-Health+</a>
 
-        <form action="#">
+        <!-- <form action="#">
           <div class="input-group input-navbar">
             <div class="input-group-prepend">
               <span class="input-group-text" id="icon-addon1"><span class="mai-search"></span></span>
             </div>
             <input type="text" class="form-control" placeholder="Enter keyword.." aria-label="Username" aria-describedby="icon-addon1">
           </div>
-        </form>
+        </form> -->
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupport" aria-controls="navbarSupport" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -72,13 +72,13 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('doctorinfo') }}">Doctors</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="about.html">About Us</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="blog.html">News</a>
             </li>
-            
+             -->
             <li class="nav-item">
               <a class="nav-link" href="contact.html">Contact</a>
             </li>
@@ -89,10 +89,10 @@
             @if (session('user_type') == 'user')
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Reports
+                MRI Scan
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{{ route('usermri') }}">MRI Scan</a></li>
+                <li><a class="dropdown-item" href="{{ route('usermri') }}">Custom CNN Model</a></li>
                 <li><a class="dropdown-item" href="{{ route('usermri2') }}">Pre-trained Model</a></li>
                 <li><a class="dropdown-item" href="{{ route('usermri3') }}">Combained Scan</a></li>
                 <!-- Add more items here if necessary -->
@@ -110,8 +110,20 @@
                 <a class="btn btn-primary ml-lg-3" href="{{ route('logout') }}">Log Out</a>
               </li>
             @elseif (session('user_type') == 'doctor')
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="{{ route('doctormri') }}">MRI Scan</a>
+            </li> -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                MRI Scan
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{{ route('doctormri') }}">MRI Scan</a></li>
+                <li><a class="dropdown-item" href="{{ route('doctormri2') }}">Pre-trained Model</a></li>
+                <li><a class="dropdown-item" href="{{ route('doctormri3') }}">Combained Scan</a></li>
+                <!-- Add more items here if necessary -->
+      
+              </ul>
             </li>
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('doctorprofile') }}">Profile</a>
