@@ -42,16 +42,57 @@
         </form>
 
         <!-- Prediction Result Section -->
-        @if(session('result') && session('imageUrl'))
-        <div class="result-section text-center mt-5 mb-5">
-            <h2 class="text-success fw-bold">Prediction Result</h2>
-            <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
-            <div class="result-text mt-4">
-                <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span></p>
-                <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> <span class="text-warning fs-4">{{ number_format(session('result')['confidence'] * 100, 2) }}%</span></p>
-            </div>
+        <!-- Add this section after the form but before the errors section -->
+<!-- Add this section after the form but before the errors section -->
+@if(session('result') && session('imageUrl'))
+    <div class="result-section text-center mt-5 mb-5">
+        <h2 class="text-success fw-bold">Prediction Result</h2>
+        <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
+        <div class="result-text mt-4">
+            @if(isset(session('result')['is_mri']) && !session('result')['is_mri'])
+                <p class="fs-3 mb-3">
+                    <span class="text-danger fs-4">Non-MRI Image Detected</span>
+                </p>
+                <p class="fs-3 mb-3 text-muted">The uploaded image was classified as a non-MRI image.</p>
+                <p class="fs-3 mb-3 text-muted">Please upload a valid MRI scan.</p>
+                <form action="{{ route('forceful.mritumor') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="imagePath" value="{{ session('imageUrl') }}">
+                    <input type="hidden" name="user_name" value="{{ old('user_name', session('user_name')) }}">
+                    <input type="hidden" name="user_id" value="{{ old('user_id', session('user_id')) }}">
+                    <button type="submit" class="btn btn-danger">Proceed to Tumor Classification Anyway</button>
+                </form>
+            @else
+                <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> 
+                    <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span>
+                </p>
+                <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> 
+                    <span class="text-warning fs-4">{{ number_format(session('result')['confidence'] * 100, 2) }}%</span>
+                </p>
+            @endif
         </div>
-        @endif
+    </div>
+@endif
+
+@if(session('proceed_disclaimer'))
+    <div class="alert alert-warning text-center mt-4">
+        <p class="fw-bold">
+            Disclaimer: The uploaded image was initially detected as a non-MRI image. 
+            <strong>OneHealth+</strong> is not viable or liable for any analysis based on this scan. 
+            Please consult a medical professional for further validation.
+        </p>
+    </div>
+@endif
+
+@if(session('proceed_disclaimer'))
+    <div class="alert alert-warning text-center mt-4">
+        <p class="fw-bold">
+            Disclaimer: The uploaded image was initially detected as a non-MRI image. 
+            <strong>OneHealth+</strong> is not viable or liable for any analysis based on this scan. 
+            Please consult a medical professional for further validation.
+        </p>
+    </div>
+@endif
 
         <!-- Errors Section -->
         @if($errors->any())

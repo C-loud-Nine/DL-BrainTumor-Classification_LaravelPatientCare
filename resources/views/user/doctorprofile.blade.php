@@ -283,7 +283,7 @@
   <ul class="sidebar-menu">
     <li><a href="{{ route('doctorapplist') }}" class="sidebar-link">Appointments</a></li>
     <li><a href="{{ route('docreport') }}" class="sidebar-link">Reports</a></li>
-    <li><a href="#" class="sidebar-link">XYZ</a></li>
+    <li><a href="#" class="sidebar-link">Notifications</a></li>
   </ul>
 </div>
 

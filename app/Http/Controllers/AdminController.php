@@ -23,6 +23,11 @@ class AdminController extends Controller
 
     public function adminHome()
 {
+    if (session()->get('user_type') !== 'admin') {
+        // If the user is not an admin, redirect to 401 Unauthorized page
+        return abort(401, 'Unauthorized Access');
+    }
+
     // Fetch reports grouped by the 'report_class' field
     $reportCounts = Report::select('report_class', Report::raw('count(*) as total'))
         ->groupBy('report_class')
@@ -44,6 +49,11 @@ class AdminController extends Controller
     // User list page
     public function userlist()
     {
+        if (session()->get('user_type') !== 'admin') {
+            // If the user is not an admin, redirect to 401 Unauthorized page
+            return abort(401, 'Unauthorized Access');
+        }
+
         $users = User::where('type', 'user')->get();
         return view('admin.userlist', compact('users'));
     }

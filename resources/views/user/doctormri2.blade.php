@@ -6,63 +6,75 @@
 <body>
     <div class="container11">
         <div class="text-center mb-5">
-            <h1 class="text-primary fw-bold">MRI Prediction</h1>
-            <p class="text-muted">Upload an MRI image for accurate medical analysis.</p>
+            <h1 class="text-primary fw-bold">MRI Prediction (Doctor's Panel)</h1>
+            <p class="text-muted">Upload an MRI image and provide user details for accurate medical analysis.</p>
         </div>
 
         @if(session('error'))
             <div class="alert alert-danger custom-error-message text-center">
                 <p class="error-text">{{ session('error') }}</p>
-                <a href="{{ route('login') }}" class="btn btn-link text-danger">Log in</a> to proceed.
             </div>
         @endif
 
-        <!-- Upload Form -->
-        <div class="card p-5 shadow-lg mb-4">
-            <form action="{{ route('upload.predict') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-4">
-                    <label for="image" class="form-label fw-bold">Upload MRI Image</label>
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+        <form action="{{ route('doctorScanReport2') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <!-- User Name and User ID in the same row -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="user_name" class="form-label fw-bold">User Name</label>
+                    <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Enter User Name" required>
                 </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-lg">Predict</button>
+                <div class="col-md-6">
+                    <label for="user_id" class="form-label fw-bold">User ID</label>
+                    <input type="text" name="user_id" id="user_id" class="form-control" placeholder="Enter User ID" required>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="mb-4">
+                <label for="image" class="form-label fw-bold">Upload MRI Image</label>
+                <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Predict</button>
+            </div>
+        </form>
 
         <!-- Prediction Result Section -->
-        @if(session('result') && session('imageUrl'))
-            <div class="result-section text-center mt-5 mb-5">
-                <h2 class="text-success fw-bold">Prediction Result</h2>
-                <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
-                <div class="result-text mt-4">
-                    @if(session('result')['is_mri'])
-                        <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> 
-                                <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span>
-                            </p>
-                            <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> 
-                                <span class="text-warning fs-4">{{ session('result')['confidence'] }}</span>
-                            </p>
-                    @else
-                        <p class="fs-3 mb-3">
-                            <span class="text-danger fs-4">Non-MRI Image</span>
-                        </p>
-                        <p class="fs-3 mb-3 text-muted">The uploaded image was classified as a non-MRI image.</p>
-                        <p class="fs-3 mb-3 text-muted">Please upload an MRI image.</p>
-                        <form action="{{ route('forceful.mritumor') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="imagePath" value="{{ session('imageUrl') }}">
-                            <button type="submit" class="btn btn-danger">Proceed to Tumor Classification</button>
-                        </form>
-                    @endif
-                </div>
-            </div>
-        @endif
+        <!-- Add this section after the form but before the errors section -->
+<!-- Add this section after the form but before the errors section -->
+@if(session('result') && session('imageUrl'))
+    <div class="result-section text-center mt-5 mb-5">
+        <h2 class="text-success fw-bold">Prediction Result</h2>
+        <img src="{{ session('imageUrl') }}" alt="Uploaded Image" class="image-preview my-4">
+        <div class="result-text mt-4">
+            @if(isset(session('result')['is_mri']) && !session('result')['is_mri'])
+                <p class="fs-3 mb-3">
+                    <span class="text-danger fs-4">Non-MRI Image Detected</span>
+                </p>
+                <p class="fs-3 mb-3 text-muted">The uploaded image was classified as a non-MRI image.</p>
+                <p class="fs-3 mb-3 text-muted">Please upload a valid MRI scan.</p>
+                <form action="{{ route('forceful.mritumor') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="imagePath" value="{{ session('imageUrl') }}">
+                    <input type="hidden" name="user_name" value="{{ old('user_name', session('user_name')) }}">
+                    <input type="hidden" name="user_id" value="{{ old('user_id', session('user_id')) }}">
+                    <button type="submit" class="btn btn-danger">Proceed to Tumor Classification Anyway</button>
+                </form>
+            @else
+                <p class="fs-3 mb-3"><strong class="text-dark">Class:</strong> 
+                    <span class="text-primary fs-4">{{ session('result')['prediction'] }}</span>
+                </p>
+                <p class="fs-3 mb-3"><strong class="text-dark">Confidence:</strong> 
+                    <span class="text-warning fs-4">{{ number_format(session('result')['confidence'] * 100, 2) }}%</span>
+                </p>
+            @endif
+        </div>
+    </div>
+@endif
 
-        
-
-        @if(session('proceed_disclaimer'))
+@if(session('proceed_disclaimer'))
     <div class="alert alert-warning text-center mt-4">
         <p class="fw-bold">
             Disclaimer: The uploaded image was initially detected as a non-MRI image. 
@@ -72,25 +84,27 @@
     </div>
 @endif
 
+@if(session('proceed_disclaimer'))
+    <div class="alert alert-warning text-center mt-4">
+        <p class="fw-bold">
+            Disclaimer: The uploaded image was initially detected as a non-MRI image. 
+            <strong>OneHealth+</strong> is not viable or liable for any analysis based on this scan. 
+            Please consult a medical professional for further validation.
+        </p>
+    </div>
+@endif
 
         <!-- Errors Section -->
         @if($errors->any())
-            <div class="alert alert-danger mt-4">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
+        <div class="alert alert-danger mt-4">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
         @endif
     </div>
 
     <x-footer />
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-
-@include('admin.script')
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -214,7 +228,6 @@
             color: #0056b3; /* Darker shade of blue for hover effect */
             text-decoration: underline;
         }
-
 
         /* Footer Margin */
         x-footer {
