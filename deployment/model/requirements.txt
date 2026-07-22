@@ -1,0 +1,13 @@
+# Pinned to the stack the saved models were verified against (TF 2.10 / Keras 2).
+#
+# TensorFlow must stay < 2.16. From 2.16 the default Keras is 3, which cannot
+# load these Keras 2 SavedModel directories (presys / 1sys / 102mod).
+tensorflow-cpu==2.10.1
+numpy==1.24.4
+protobuf==3.19.6
+
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+opencv-python-headless==4.9.0.80
+Pillow==10.2.0

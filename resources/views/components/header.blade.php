@@ -79,10 +79,10 @@
               <a class="nav-link" href="blog.html">News</a>
             </li>
              -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="contact.html">Contact</a>
             </li>
-  
+   -->
 
             <!-- User-specific Links -->
              
@@ -95,6 +95,8 @@
                 <li><a class="dropdown-item" href="{{ route('usermri') }}">Custom CNN Model</a></li>
                 <li><a class="dropdown-item" href="{{ route('usermri2') }}">Pre-trained Model</a></li>
                 <li><a class="dropdown-item" href="{{ route('usermri3') }}">Combained Scan</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ route('gradcam') }}">Grad-CAM Analysis</a></li>
                 <!-- Add more items here if necessary -->
               </ul>
             </li>
@@ -103,12 +105,13 @@
               <a class="nav-link" href="{{ route('appointmentpage') }}">Appointment</a>
             </li>
 
-              <li class="nav-item">
+             <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('userprofile') }}">Profile</a>
               </li>
               <li class="nav-item">
-                <a class="btn btn-primary ml-lg-3" href="{{ route('logout') }}">Log Out</a>
+                <a class="btn btn-primary ml-lg-3 mt-2 mt-lg-0" href="{{ route('logout') }}">Log Out</a>
               </li>
+
             @elseif (session('user_type') == 'doctor')
             <!-- <li class="nav-item">
               <a class="nav-link" href="{{ route('doctormri') }}">MRI Scan</a>
@@ -135,12 +138,13 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ route('usermri') }}">Reports</a>
             </li>
-              <li class="nav-item">
-                <a class="btn btn-primary ml-lg-3" href="{{ route('login') }}">Login</a>
+             <li class="nav-item">
+                <a class="btn btn-primary ml-lg-3 mb-2 mb-lg-0" href="{{ route('login') }}">Login</a>
               </li>
               <li class="nav-item">
                 <a class="btn btn-primary ml-lg-3" href="{{ route('register') }}">Register</a>
               </li>
+
             @endif
 
           </ul>

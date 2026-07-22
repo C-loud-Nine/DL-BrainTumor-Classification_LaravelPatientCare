@@ -1,0 +1,143 @@
+# OneHealth+ service orchestration.
+#
+#   web        - Laravel application (Nginx + PHP-FPM). Only service published
+#                to the host.
+#   model1/2/3 - FastAPI inference services. The application needs three
+#                endpoints because the dual-model pages (usermri3, doctormri3)
+#                query two classifiers at once and compare them:
+#                   model1  presys  <- FASTAPI_URL    (forceful classification)
+#                   model2  presys  <- FASTAPI_URL_2  (primary path)
+#                   model3  1sys    <- FASTAPI_URL_3  (second opinion)
+#   db         - MySQL 8.0
+#
+# All three model services run the SAME image (ml_server/model_server.py);
+# they differ only by which tumour classifier they load.
+#
+# Build contexts are the REPOSITORY ROOT (`..`): the web image needs
+# composer.json/artisan/app, and the model image needs ml_server/.
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: onehealth_web
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-hospital}
+      DB_USERNAME: ${DB_USERNAME:-hospital}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      # These names are what the application actually reads: env('FASTAPI_URL'),
+      # env('FASTAPI_URL_2'), env('FASTAPI_URL_3').
+      FASTAPI_URL: http://model1:8000
+      FASTAPI_URL_2: http://model2:8000
+      FASTAPI_URL_3: http://model3:8000
+    volumes:
+      # Uploaded scans and generated Grad-CAM overlays must outlive the container.
+      - app_uploads:/var/www/html/public/uploads
+      - app_storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+      model1:
+        condition: service_healthy
+      model2:
+        condition: service_healthy
+      model3:
+        condition: service_healthy
+    networks:
+      - onehealth
+
+  model1:
+    build: &model_build
+      context: ..
+      dockerfile: deployment/model/Dockerfile
+    image: onehealth_model:latest
+    container_name: onehealth_model1
+    restart: unless-stopped
+    environment: &model_env
+      TUMOR_MODEL: /app/weights/presys
+      MRI_MODEL: /app/weights/102mod
+      GRADCAM_LAYER: ${GRADCAM_LAYER:-Conv5}
+    volumes: &model_vols
+      - ./model/weights:/app/weights:ro
+    healthcheck: &model_health
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 120s
+    expose:
+      - "8000"
+    networks:
+      - onehealth
+
+  model2:
+    build: *model_build
+    image: onehealth_model:latest
+    container_name: onehealth_model2
+    restart: unless-stopped
+    environment: *model_env
+    volumes: *model_vols
+    healthcheck: *model_health
+    expose:
+      - "8000"
+    networks:
+      - onehealth
+
+  model3:
+    build: *model_build
+    image: onehealth_model:latest
+    container_name: onehealth_model3
+    restart: unless-stopped
+    environment:
+      # The second opinion: a different trained classifier.
+      TUMOR_MODEL: /app/weights/1sys
+      MRI_MODEL: /app/weights/102mod
+      GRADCAM_LAYER: ${GRADCAM_LAYER:-Conv5}
+    volumes: *model_vols
+    healthcheck: *model_health
+    expose:
+      - "8000"
+    networks:
+      - onehealth
+
+  db:
+    image: mysql:8.0
+    container_name: onehealth_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-hospital}
+      MYSQL_USER: ${DB_USERNAME:-hospital}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - db_data:/var/lib/mysql
+    expose:
+      - "3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - onehealth
+
+volumes:
+  db_data:
+  app_uploads:
+  app_storage:
+
+networks:
+  onehealth:
+    driver: bridge
