@@ -1,0 +1,20 @@
+Append these lines to the repository's .gitignore.
+
+Paths are relative to the REPOSITORY ROOT, which is where .gitignore lives.
+
+# Trained model weights (SavedModel directories, staged by collect_weights.ps1)
+/deployment/model/weights/*
+!/deployment/model/weights/.gitkeep
+!/deployment/model/weights/README.md
+
+# Local model-server logs
+/ml_server/*.log
+
+# Deployment secrets
+/deployment/.env
+
+# User uploads and generated Grad-CAM overlays
+/public/uploads/mri/*
+/public/uploads/gradcam/*
+/public/uploads/profile/*
+!/public/uploads/**/.gitkeep

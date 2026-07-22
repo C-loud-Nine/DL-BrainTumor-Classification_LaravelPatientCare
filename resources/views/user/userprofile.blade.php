@@ -12,26 +12,56 @@
   <link rel="stylesheet" href="../assets/vendor/animate/animate.css">
   <link rel="stylesheet" href="../assets/css/theme.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMz6N1zBc5i7VgrWxk+nE2k7v4KLKekf5vhT9gO" crossorigin="anonymous">
-  <style>
-    /* General page styles */
+<style>
+    /* ===== Base Styles ===== */
+    :root {
+      --primary: #007bff;
+      --primary-dark: #0056b3;
+      --secondary: #63628B;
+      --danger: #dc3545;
+      --danger-dark: #c82333;
+      --light: #f8f9fa;
+      --white: #ffffff;
+      --text: #333333;
+      --text-light: #555555;
+      --border: #dddddd;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --radius: 10px;
+      --transition: all 0.3s ease;
+    }
+
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f4f7fa;
-      color: #333;
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Profile page container */
+    /* ===== Layout Structure ===== */
+    .container-scroller {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .main-panel {
+      width: 100%;
+      padding: 20px 15px;
+    }
+
+    /* ===== Profile Container ===== */
     .profile-container {
       max-width: 900px;
       margin: 30px auto;
       padding: 25px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      border: 1px solid #ddd;
+      background-color: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
     }
 
-    /* Profile header styling */
+    /* ===== Profile Header ===== */
     .profile-header {
       text-align: center;
       margin-bottom: 30px;
@@ -40,7 +70,8 @@
     .profile-header h1 {
       font-size: 2.5rem;
       font-weight: bold;
-      color: #007bff;
+      color: var(--primary);
+      margin-bottom: 20px;
     }
 
     .profile-header img {
@@ -48,26 +79,25 @@
       height: 150px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid #007bff;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 4px solid var(--primary);
+      transition: var(--transition);
     }
 
     .profile-header img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 15px rgba(0, 123, 255, 0.5);
+      transform: scale(1.05);
+      box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
     }
 
     .profile-header h2 {
       font-size: 1.8rem;
       font-weight: 600;
-      color: #333;
+      color: var(--text);
       margin-top: 15px;
     }
 
-    /* Profile details layout */
+    /* ===== Profile Details ===== */
     .profile-details {
       font-size: 1.1rem;
-      color: #333;
       background-color: #f9f9f9;
       padding: 20px;
       border-radius: 8px;
@@ -76,177 +106,257 @@
     }
 
     .profile-details .row {
+      display: flex;
+      flex-wrap: wrap;
       margin-bottom: 15px;
     }
 
-    .profile-details .row .label {
+    .profile-details .col {
+      flex: 1;
+      min-width: 250px;
+      margin-bottom: 10px;
+    }
+
+    .profile-details .label {
       font-weight: bold;
-      color: #007bff;
+      color: var(--primary);
     }
 
-    .profile-details .row .info {
-      color: #555;
+    .profile-details .info {
+      color: var(--text-light);
+      padding-left: 10px;
     }
 
-    /* Button styles */
+    /* ===== Action Buttons ===== */
     .action-buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 30px;
+      gap: 15px;
     }
 
     .btn {
-      padding: 10px 20px;
+      padding: 12px 20px;
       border-radius: 5px;
       font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+      border: none;
+      flex: 1;
     }
 
     .btn-edit {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      transition: background-color 0.3s;
+      background-color: var(--primary);
+      color: var(--white);
     }
 
     .btn-edit:hover {
-      background-color: #0056b3;
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
     }
 
     .btn-delete {
-      background-color: #dc3545;
-      color: #fff;
+      background-color: var(--danger);
+      color: var(--white);
       text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s;
     }
 
     .btn-delete:hover {
-      background-color: #c82333;
+      background-color: var(--danger-dark);
+      transform: translateY(-2px);
     }
 
-    /* Modal styles */
+    /* ===== Sidebar ===== */
+    .sidebar {
+      position: fixed;
+      top: 140px;
+      right: 20px;
+      width: 220px;
+      padding: 15px;
+      background-color: var(--light);
+      border: 3px solid var(--secondary);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: 12px 15px;
+      margin: 5px 0;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 5px;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .sidebar-link:hover {
+      background-color: var(--secondary);
+      color: var(--white);
+      transform: translateX(5px);
+    }
+
+    /* ===== Modal Styles ===== */
     .modal-content {
-      border-radius: 10px;
+      border-radius: var(--radius);
+      border: none;
     }
 
     .modal-header {
-      background-color: #007bff;
-      color: #fff;
+      background-color: var(--primary);
+      color: var(--white);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 15px 20px;
+    }
+
+    .modal-title {
+      font-weight: 600;
     }
 
     .modal-body {
-      padding: 25px;
+      padding: 20px;
     }
 
     .form-label {
       font-weight: bold;
-      color: #007bff;
+      color: var(--primary);
+      margin-bottom: 8px;
     }
 
     .form-control {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      transition: var(--transition);
     }
 
-    .form-check-label {
-      font-size: 0.9rem;
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
 
     .preview-img {
       width: 100%;
       height: 150px;
-      object-fit: cover;
+      object-fit: contain;
       display: none;
-      border-radius: 10px;
+      border-radius: 5px;
       margin-top: 10px;
+      border: 1px solid var(--border);
+      background: #f9f9f9;
     }
 
     .preview-img.show {
       display: block;
     }
-    
 
-         /* Sidebar container styling */
-  .sidebar {
-    position: fixed;
-    top: 140px; /* Align with existing position */
-    right: 100px;
-    width: 220px;
-    padding: 15px 10px;
-    background-color: #f8f9fa; /* Light background */
-    border: 5px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-    z-index: 1000; /* Ensure it stays on top */
-    transition: all 0.3s ease;
-    border-color: #63628B; /* Primary blue border color */
-  }
-
-  /* Sidebar menu items */
-  .sidebar-menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Individual sidebar links */
-  .sidebar-link {
-    display: block;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-    padding: 12px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-  }
-
-  /* Hover effects for links */
-  .sidebar-link:hover {
-    background-color: #63628B; /* Primary blue */
-    color: #fff;
-    box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
-  }
-
-  /* Responsive behavior */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 100%; /* Full width for smaller screens */
-      right: 0;
-      top: 100px;
-      padding: 20px;
+    /* ===== Responsive Adjustments ===== */
+    @media (max-width: 992px) {
+      .sidebar {
+        right: 15px;
+        width: 200px;
+      }
     }
 
-    .sidebar-link {
-      text-align: center; /* Center align for smaller screens */
-    }
-  }
-    /* Responsive styles */
     @media (max-width: 768px) {
+      .main-panel {
+        padding: 15px;
+      }
+      
+      .profile-container {
+        margin: 20px auto;
+        padding: 20px;
+        width: calc(100% - 30px);
+      }
+      
+      .sidebar {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: calc(100% - 30px);
+        margin: 0 auto 20px;
+        padding: 10px;
+      }
+      
+      .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+      }
+      
+      .sidebar-link {
+        padding: 10px 15px;
+        margin: 0;
+        font-size: 0.9rem;
+      }
+      
       .profile-header h1 {
         font-size: 2rem;
       }
-
+      
       .profile-header h2 {
         font-size: 1.5rem;
       }
-
-      .profile-details {
-        padding: 15px;
+      
+      .profile-header img {
+        width: 120px;
+        height: 120px;
       }
-
+      
       .action-buttons {
         flex-direction: column;
-        align-items: center;
+        gap: 10px;
       }
-
-      .btn {
-        width: 100%;
-        margin: 10px 0;
+      
+      .profile-details .col {
+        min-width: 100%;
       }
     }
-  </style>
+
+    @media (max-width: 480px) {
+      .profile-container {
+        padding: 15px;
+      }
+      
+      .profile-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .profile-header h2 {
+        font-size: 1.3rem;
+      }
+      
+      .profile-header img {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .sidebar-link {
+        padding: 8px 12px;
+      }
+      
+      .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+      
+      .modal-body {
+        padding: 15px;
+      }
+    }
+</style>
 </head>
 <body>
 

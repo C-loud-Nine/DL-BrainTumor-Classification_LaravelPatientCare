@@ -37,12 +37,12 @@ class ImageUploadController extends Controller
         
             // Validate the uploaded image
             $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:5100',
             ], [
                 'image.required' => 'Please upload an image.',
                 'image.image' => 'The file must be a valid image.',
                 'image.mimes' => 'Only JPEG, PNG, and JPG formats are supported.',
-                'image.max' => 'Image size must not exceed 2MB.',
+                'image.max' => 'Image size must not exceed 5MB.',
             ]);
         
             // Handle file upload
@@ -633,7 +633,7 @@ class ImageUploadController extends Controller
                 // Prepare the image for FastAPI prediction
                 $imageData = fopen($uploadPath . $imageName, 'r');
                 $response = Http::attach('file', $imageData, $imageName)
-                    ->post(env('FASTAPI_URL_2') . '/predict');
+                    ->post(env('FASTAPI_URL_3') . '/predict');
         
                 if ($response->successful()) {
                     $result = $response->json();
@@ -1044,8 +1044,179 @@ public function forcefulTumorClassification2(Request $request)
     }
 }
 
-        
+
+////////////////////////////////////////////////
+// Grad-CAM explainability
+////////////////////////////////////////////////
+
+        public function gradcam()
+        {
+            if (!session()->has('user_id')) {
+                return redirect()->route('login')->with('error', 'Please log in to use Grad-CAM analysis.');
+            }
+
+            return view('user.gradcam');
+        }
 
 
+        public function gradcamPredict(Request $request)
+        {
+            if (!session()->has('user_id')) {
+                return redirect()->route('login')->with('error', 'Please log in to use Grad-CAM analysis.');
+            }
+
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:5100',
+                'model' => 'nullable|in:1,2',
+            ], [
+                'image.required' => 'Please upload an image.',
+                'image.image' => 'The file must be a valid image.',
+                'image.mimes' => 'Only JPEG, PNG, and JPG formats are supported.',
+                'image.max' => 'Image size must not exceed 5MB.',
+            ]);
+
+            // Store the uploaded scan
+            $image = $request->file('image');
+            $uploadPath = public_path('uploads/mri/');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move($uploadPath, $imageName);
+
+            // Model 1 = presys (8002), Model 2 = 1sys (8003)
+            $useModel2 = $request->input('model') === '2';
+            $endpoint = $useModel2 ? env('FASTAPI_URL_3') : env('FASTAPI_URL_2');
+
+            try {
+                $imageData = fopen($uploadPath . $imageName, 'r');
+                $response = Http::timeout(60)
+                    ->attach('file', $imageData, $imageName)
+                    ->post($endpoint . '/gradcam');
+
+                if ($response->successful()) {
+                    $result = $response->json();
+
+                    // Persist the returned images as real files. Keeping the
+                    // base64 blobs in the session would blow past the cookie/file
+                    // session limits.
+                    $gradPath = public_path('uploads/gradcam/');
+                    if (!file_exists($gradPath)) {
+                        mkdir($gradPath, 0755, true);
+                    }
+                    $stem = pathinfo($imageName, PATHINFO_FILENAME);
+
+                    $saveDataUri = function ($dataUri, $fileName) use ($gradPath) {
+                        if (empty($dataUri)) {
+                            return null;
+                        }
+                        $parts = explode(',', $dataUri, 2);
+                        if (count($parts) !== 2) {
+                            return null;
+                        }
+                        file_put_contents($gradPath . $fileName, base64_decode($parts[1]));
+                        return asset('uploads/gradcam/' . $fileName);
+                    };
+
+                    $gradcamUrl = $saveDataUri($result['gradcam'] ?? null, 'gradcam_' . $stem . '.png');
+                    $baseUrl    = $saveDataUri($result['base_image'] ?? null, 'base_' . $stem . '.png');
+
+                    unset($result['gradcam'], $result['base_image']);
+
+                    return redirect()->route('gradcam')->with([
+                        'result'     => $result,
+                        'imageUrl'   => asset('uploads/mri/' . $imageName),
+                        'gradcamUrl' => $gradcamUrl,
+                        'baseUrl'    => $baseUrl,
+                        'modelUsed'  => $useModel2 ? 'Model 2 (1sys)' : 'Model 1 (presys)',
+                    ]);
+                }
+
+                return back()->withErrors(['message' => 'Grad-CAM generation failed. Please try again.']);
+            } catch (\Exception $e) {
+                Log::error('FastAPI Grad-CAM Error: ' . $e->getMessage());
+                return back()->withErrors(['message' => 'Error connecting to FastAPI: ' . $e->getMessage()]);
+            }
+        }
+
+
+        /**
+         * Run Grad-CAM against a report that already exists, and hand the result
+         * back as JSON. Used by the doctor review console, which loads the
+         * heatmap on demand rather than for every row in the table.
+         */
+        public function reportGradcam(Request $request)
+        {
+            if (!session()->has('user_id')) {
+                return response()->json(['error' => 'Unauthorized. Please log in.'], 401);
+            }
+
+            $request->validate([
+                'report_id' => 'required|exists:reports,id',
+                'model'     => 'nullable|in:1,2',
+            ]);
+
+            $report = Report::findOrFail($request->input('report_id'));
+            $imagePath = public_path('uploads/mri/' . $report->report_image);
+
+            if (!file_exists($imagePath)) {
+                return response()->json(['error' => 'Scan file is missing on disk.'], 404);
+            }
+
+            $useModel2 = $request->input('model') === '2';
+            $endpoint  = $useModel2 ? env('FASTAPI_URL_3') : env('FASTAPI_URL_2');
+
+            try {
+                $handle = fopen($imagePath, 'r');
+                $response = Http::timeout(60)
+                    ->attach('file', $handle, $report->report_image)
+                    ->post($endpoint . '/gradcam');
+
+                if (!$response->successful()) {
+                    return response()->json(['error' => 'Model server returned an error.'], 502);
+                }
+
+                $result = $response->json();
+
+                // Cache the rendered images on disk keyed by report + model, so
+                // re-opening the same report doesn't re-run the model.
+                $gradPath = public_path('uploads/gradcam/');
+                if (!file_exists($gradPath)) {
+                    mkdir($gradPath, 0755, true);
+                }
+                $suffix = 'r' . $report->id . '_m' . ($useModel2 ? '2' : '1');
+
+                $save = function ($dataUri, $fileName) use ($gradPath) {
+                    if (empty($dataUri)) {
+                        return null;
+                    }
+                    $parts = explode(',', $dataUri, 2);
+                    if (count($parts) !== 2) {
+                        return null;
+                    }
+                    file_put_contents($gradPath . $fileName, base64_decode($parts[1]));
+                    return asset('uploads/gradcam/' . $fileName);
+                };
+
+                $gradcamUrl = $save($result['gradcam'] ?? null, 'cam_' . $suffix . '.png');
+                $baseUrl    = $save($result['base_image'] ?? null, 'cambase_' . $suffix . '.png');
+
+                return response()->json([
+                    'ok'            => true,
+                    'model'         => $useModel2 ? 'Model 2 (1sys)' : 'Model 1 (presys)',
+                    'is_mri'        => $result['is_mri'] ?? null,
+                    'mri_confidence'=> $result['mri_confidence'] ?? null,
+                    'prediction'    => $result['prediction'] ?? null,
+                    'confidence'    => $result['confidence'] ?? null,
+                    'probabilities' => $result['probabilities'] ?? [],
+                    'gradcam_layer' => $result['gradcam_layer'] ?? null,
+                    'gradcamUrl'    => $gradcamUrl,
+                    'baseUrl'       => $baseUrl,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Report Grad-CAM Error: ' . $e->getMessage());
+                return response()->json(['error' => 'Could not reach the model server.'], 502);
+            }
+        }
 
 }

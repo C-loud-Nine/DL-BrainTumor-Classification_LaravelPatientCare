@@ -181,7 +181,9 @@ public function updateDoctorProfile(Request $request, $id)
     $doctor->specialization = $request->specialization;
     $doctor->room = $request->room;
     $doctor->appointment = $request->appointment;
-    $doctor->rating = $request->rating;
+    $doctor->rating = $request->filled('rating') ? $request->rating : ($doctor->rating ?? 0);
+    $doctor->rating_count = $doctor->rating_count ?? 0;
+
 
     // Update password if provided
     if ($request->filled('password')) {
@@ -468,11 +470,15 @@ public function showReports()
 
     $ver = RepVerdict::all();
 
+    // Keyed by report so the view can look a verdict up directly instead of
+    // firing a query per row.
+    $verdicts = $ver->keyBy('report_id');
+
     // Get unique scanner names for filtering purposes
     $uniqueScannerNames = Report::distinct('scanner_name')->pluck('scanner_name');
 
     // Return the view with the necessary data
-    return view('user.docreport', compact('reports', 'uniqueScannerNames', 'doctorName' , 'ver'));
+    return view('user.docreport', compact('reports', 'uniqueScannerNames', 'doctorName', 'ver', 'verdicts'));
 }
 
 
@@ -554,14 +560,28 @@ public function saveVerdict(Request $request)
     try {
         // Validate the incoming request
         $validated = $request->validate([
-            'report_id' => 'required|exists:reports,id',
-            'verdict' => 'required|in:Yes,No',
+            'report_id'       => 'required|exists:reports,id',
+            'verdict'         => 'required|in:Yes,No,Uncertain',
+            'corrected_class' => 'nullable|in:glioma,meningioma,pituitary,notumor',
+            'certainty'       => 'nullable|in:High,Moderate,Low',
+            'notes'           => 'nullable|string|max:2000',
         ]);
+
+        // A reclassification only makes sense when the doctor disagrees.
+        $correctedClass = $validated['verdict'] === 'No'
+            ? ($validated['corrected_class'] ?? null)
+            : null;
 
         // Save verdict in the `repverdict` table
         RepVerdict::updateOrCreate(
             ['report_id' => $validated['report_id']], // Check for existing record
-            ['verdict' => $validated['verdict']] // Update or create the verdict
+            [
+                'verdict'         => $validated['verdict'],
+                'corrected_class' => $correctedClass,
+                'certainty'       => $validated['certainty'] ?? null,
+                'notes'           => $validated['notes'] ?? null,
+                'reviewed_by'     => session('user_name'),
+            ]
         );
 
         // Return a success message (you can handle this differently if needed)
