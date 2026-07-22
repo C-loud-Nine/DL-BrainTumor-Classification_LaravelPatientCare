@@ -20,3 +20,24 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+
+# Nested node_modules (the /node_modules rule above only covers the repo root)
+**/node_modules
+
+# Uploaded scans and generated Grad-CAM overlays. These are runtime data, not
+# source. Files already committed stay tracked; this stops new ones piling up.
+/public/uploads/mri/*
+/public/uploads/gradcam/*
+/public/uploads/profile/*
+!/public/uploads/**/.gitkeep
+
+# Local model-server logs
+/ml_server/*.log
+
+# Trained model weights (SavedModel directories staged by collect_weights.ps1)
+/deployment/model/weights/*
+!/deployment/model/weights/.gitkeep
+!/deployment/model/weights/README.md
+
+# Deployment secrets
+/deployment/.env
