@@ -68,6 +68,14 @@ Route::post('/usermri3/predict', [ImageUploadController::class, 'uploadAndPredic
 Route::post('/usermri3/forceful', [ImageUploadController::class, 'forcefulTumorClassification3'])->name('forceful.mritumor3');
 
 
+// Grad-CAM explainability: scan + heatmap shown side by side
+Route::get('/gradcam', [ImageUploadController::class, 'gradcam'])->name('gradcam');
+Route::post('/gradcam/predict', [ImageUploadController::class, 'gradcamPredict'])->name('gradcam.predict');
+
+// On-demand Grad-CAM for an existing report (doctor review console, JSON)
+Route::post('/docreport/gradcam', [ImageUploadController::class, 'reportGradcam'])->name('docreport.gradcam');
+
+
 
 
 // Route::get('/', function (Request $request) {

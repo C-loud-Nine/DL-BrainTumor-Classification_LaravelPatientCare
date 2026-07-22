@@ -18,7 +18,7 @@
       <div class="container text-center wow zoomIn">
         <span class="subhead">Let's make your life happier</span>
         <h1 class="display-4">Healthy Living</h1>
-        <a href="#" class="btn btn-primary">Let's Consult</a>
+        <a href="{{ route('doctorinfo') }}" class="btn btn-primary">Let's Consult</a>
       </div>
     </div>
   </div>
@@ -56,23 +56,25 @@
       </div>
     </div> <!-- .page-section -->
 
-    <div class="page-section pb-0">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 py-3 wow fadeInUp">
-            <h1>Welcome to Your Health <br> Center</h1>
-            <p class="text-grey mb-4">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Accusantium aperiam earum ipsa eius, inventore nemo labore eaque porro consequatur ex aspernatur. Explicabo, excepturi accusantium! Placeat voluptates esse ut optio facilis!</p>
-            <a href="about.html" class="btn btn-primary">Learn More</a>
-          </div>
-          <div class="col-lg-6 wow fadeInRight" data-wow-delay="400ms">
-            <div class="img-place custom-img-1">
-              <img src="../assets/img/bg-doctor.png" alt="">
-            </div>
-          </div>
+<div class="page-section pb-0">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 py-3 wow fadeInUp">
+        <h1>Welcome to Your Health <br> Center</h1>
+        <p class="text-grey mb-4">
+          One Health+ is an all-in-one patient care application designed to simplify healthcare access. It offers features such as online doctor appointments, automated deep learning-based brain MRI scan analysis, digital health records, and secure patient-doctor communication — all in one unified platform. Built with smart AI, One Health+ aims to improve diagnosis accuracy, reduce waiting time, and ensure continuous care for patients.
+        </p>
+        <a href="about.html" class="btn btn-primary">Learn More</a>
+      </div>
+      <div class="col-lg-6 wow fadeInRight" data-wow-delay="400ms">
+        <div class="img-place custom-img-1">
+          <img src="../assets/img/bg-doctor.png" alt="">
         </div>
       </div>
-    </div> <!-- .bg-light -->
-  </div> <!-- .bg-light -->
+    </div>
+  </div>
+</div> <!-- .bg-light -->
+
 
 
 
@@ -83,7 +85,7 @@
 
       
       
-      @include('user.latest')
+    
 
   
   

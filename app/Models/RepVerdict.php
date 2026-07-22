@@ -11,7 +11,14 @@ class RepVerdict extends Model
 
     protected $table = 'repverdict'; // Explicitly define the table name
 
-    protected $fillable = ['report_id', 'verdict'];
+    protected $fillable = [
+        'report_id',
+        'verdict',
+        'corrected_class',
+        'certainty',
+        'notes',
+        'reviewed_by',
+    ];
 
     public function report()
     {

@@ -40,7 +40,7 @@
               </span>
             </div>
 
-            <a href="profile.html" class="btn-readmore">Read More</a>
+            <!-- <a href="profile.html" class="btn-readmore">Read More</a> -->
           </div>
         </div>
       </div>

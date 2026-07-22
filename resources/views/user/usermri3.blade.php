@@ -97,11 +97,15 @@
     <x-footer />
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
     @include('admin.script')
 </body>
 </html>
-
+@include('admin.script')
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
     /* General Body Styling */
     body {
@@ -238,9 +242,51 @@
         text-align: center;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+    /* Responsive Adjustments for Mobile Devices */
+@media (max-width: 768px) {
+    .container11 {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .results-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .result-block {
+        margin: 20px 0;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .image-preview {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .btn-primary, .btn-link {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.5rem;
+    }
+
+    .text-muted, .result-text p {
+        font-size: 1rem;
+    }
+}
+
 
     /* Footer Margin */
     x-footer {
         margin-top: 40px;
     }
 </style>
+</body>
+</html>

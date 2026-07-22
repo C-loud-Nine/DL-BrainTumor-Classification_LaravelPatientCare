@@ -1,0 +1,35 @@
+# Docker build context is the repository root (see deployment/Dockerfile and
+# deployment/model/Dockerfile). A .dockerignore only takes effect at the context
+# root, which is why this file lives here and not in deployment/.
+
+.git
+.gitignore
+
+# Dependencies are installed inside the image
+vendor
+node_modules
+**/node_modules
+
+# Local environment - values are supplied by docker-compose
+.env
+.env.backup
+
+# Runtime state: recreated by the entrypoint / mounted as volumes
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# User uploads and generated Grad-CAM overlays are volumes, not image content
+public/uploads
+
+# Large model artefacts are mounted read-only at run time
+deployment/model/weights/*
+!deployment/model/weights/.gitkeep
+
+# Local tooling that the image does not need
+tests
+phpunit.xml
+ml_server/*.log
+ml_server/start_models.bat
