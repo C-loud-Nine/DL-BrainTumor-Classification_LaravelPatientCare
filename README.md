@@ -7,7 +7,7 @@ License: MIT
 
 OneHealth+ embeds a previously published lightweight brain tumor classifier, **DSCBAM-Net**, inside a verification-first clinical pipeline. Every uploaded image is authenticated as a genuine MRI slice before classification, every prediction is paired with a Grad-CAM saliency overlay, and no diagnosis reaches a patient until a credentialed clinician confirms or overrides it — with every decision and timestamp permanently logged. The platform is designed to run on CPU-only commodity hardware, removing the GPU dependency that blocks adoption in resource-constrained settings.
 
-> This repository accompanies the SoftwareX article describing OneHealth+. The classifier itself is described and evaluated separately; see the [citation](#citation) below.
+
 
 ---
 
