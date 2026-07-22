@@ -80,6 +80,8 @@
     <x-footer />
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    @include('admin.script')
 </body>
 </html>
 
@@ -207,6 +209,70 @@
             color: #0056b3; /* Darker shade of blue for hover effect */
             text-decoration: underline;
         }
+
+        /* ===============================
+   Responsive Design for Mobile
+   =============================== */
+@media (max-width: 768px) {
+    .container11 {
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        padding: 20px !important;
+    }
+
+    .btn-primary,
+    .btn-danger {
+        width: 100%;
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .image-preview {
+        max-width: 90%;
+        max-height: 250px;
+    }
+
+    .result-text p {
+        font-size: 1.1rem;
+    }
+
+    h1, h2 {
+        font-size: 1.5rem;
+    }
+
+    .btn-link {
+        font-size: 1.1rem;
+    }
+
+    .custom-error-message {
+        padding: 15px;
+    }
+
+    .alert {
+        font-size: 0.9rem;
+    }
+
+    form .form-label {
+        font-size: 1rem;
+    }
+
+    form .form-control {
+        font-size: 0.95rem;
+    }
+
+    .text-center.mb-5 {
+        margin-bottom: 2rem !important;
+    }
+
+    .result-section {
+        padding: 15px;
+    }
+}
+
 
 
         /* Footer Margin */

@@ -149,45 +149,42 @@
     }
 
     /* Filter dropdown styling */
-    .filter-container {
-    position: absolute;
-    right: 70px;
-    top: 120px;
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    }
+.filter-container {
+  position: relative; /* changed from absolute */
+  margin: 20px auto;
+  text-align: center;
+  z-index: 10;
+}
 
-    /* Dropdown select styling */
-    .filter-container select {
-    padding: 12px;
-    font-size: 1.1rem;
-    border: 1px solid #007bff;
-    border-radius: 8px;
-    outline: none;
-    background-color: #f8f9fa;
-    width: 200px;
-    transition: all 0.3s ease; /* Smooth transition for hover and focus */
-    }
+.filter-container select {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  outline: none;
+  background-color: #f8f9fa;
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.3s ease;
+}
 
-    /* Hover effect for dropdown */
-    .filter-container select:hover {
-    border-color: #0056b3;
-    background-color: #e6f0ff;
-    }
+/* Hover effect for dropdown */
+.filter-container select:hover {
+  border-color: #0056b3;
+  background-color: #e6f0ff;
+}
 
-    /* Focus effect for dropdown */
-    .filter-container select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue glow on focus */
-    }
+/* Focus effect for dropdown */
+.filter-container select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 
-    /* Add a subtle hover effect to the dropdown items */
-    .filter-container select option:hover {
-    background-color: #f0f8ff;
-    }
+/* Add a subtle hover effect to the dropdown items */
+.filter-container select option:hover {
+  background-color: #f0f8ff;
+}
+
 
 
     /* Modal Styling */
@@ -269,6 +266,7 @@
         grid-template-columns: 1fr; /* 1 card per row */
       }
     }
+    
   </style>
 </head>
 <body>

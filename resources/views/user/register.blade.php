@@ -240,4 +240,83 @@
       padding: 15px;
     }
   }
+  @media (max-width: 768px) {
+  .contact-form {
+    max-width: 100%;
+    margin: 0 10px;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: none;
+  }
+
+  h1.text-center {
+    font-size: 24px;
+  }
+
+  .contact-form label {
+    font-size: 14px;
+  }
+
+  .contact-form input[type="text"],
+  .contact-form input[type="email"],
+  .contact-form input[type="password"],
+  .contact-form input[type="file"] {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .eye-img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .toggle-btn {
+    right: 8px;
+  }
+
+  .contact-form button[type="submit"] {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .image-preview {
+    width: 120px;
+    height: 120px;
+  }
+
+  .error-message,
+  .success-message {
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 480px) {
+  h1.text-center {
+    font-size: 20px;
+  }
+
+  .contact-form {
+    padding: 10px;
+  }
+
+  .contact-form button[type="submit"] {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .toggle-btn {
+    right: 6px;
+  }
+
+  .eye-img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .image-preview {
+    width: 100px;
+    height: 100px;
+  }
+}
+
 </style>
